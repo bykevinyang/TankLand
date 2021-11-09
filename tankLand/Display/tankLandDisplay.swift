@@ -9,6 +9,7 @@ extension TankLand{
     for num in 1...15 {
     for r in 0...self.numberRows*4 {
       for c in 0..<self.numberCols {
+					
 				var one = "|" + fit((/*energy*/, 7, right: Bool = true)
 				var two = "|" + fit(/*ID*/, 7, right: Bool = true)
         var three = "|" + fit(/*position*/, 7, right: Bool = true)
@@ -16,7 +17,6 @@ extension TankLand{
 				}
       }
     }
-		print(seperatingBar)
     }
 	}
 }
