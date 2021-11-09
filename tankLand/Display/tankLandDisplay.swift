@@ -11,7 +11,8 @@ extension TankLand{
       for c in 0..<self.numberCols {
 				var one = "|" + fit((/*energy*/, 7, right: Bool = true)
 				var two = "|" + fit(/*ID*/, 7, right: Bool = true)
-        var one = "|" + fit(/*energy*/, 7, right: Bool = true)
+        var three = "|" + fit(/*position*/, 7, right: Bool = true)
+        var four = seperatingBar
 				}
       }
     }
