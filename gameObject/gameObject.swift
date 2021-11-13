@@ -16,15 +16,15 @@ class GameObject: CustomStringConvertible {
         self.energy = energy
     }
     
-    // final func chargeEnergy(_ amount: Int) {
-    //     self.energy -= amount
-    // }
+    final func chargeEnergy(_ amount: Int) {
+        self.energy -= amount
+    }
     
-    // final func gainEnergy(_ amount: Int) {
-    //     self.energy += amount
-    // }
+    final func gainEnergy(_ amount: Int) {
+        self.energy += amount
+    }
     
-    // final func setPosition(_ newPosition: Position) {
-    //     self.position = newPosition
-    // }
+    final func setPosition(_ newPosition: Position) {
+        self.position = newPosition
+    }
 }

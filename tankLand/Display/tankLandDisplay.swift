@@ -21,7 +21,7 @@ extension TankLand {
 
 						printLines[0].append("|" + fitI(energy, 7, right: true))
 						printLines[1].append("|" + fit(id, 7, right: true))
-						printLines[2].append("|" + fit("POS", 7, right: true))
+						printLines[2].append("|" + fit((val.position.description), 7, right: true))
 
 					} else {
 						printLines[0].append("|" + fit("", 7, right: true))
