@@ -20,7 +20,23 @@ class TankLand {
 			turn = 0
  	//other init stuff
     }
-    
+
+    func isOnGrid(row: Int, col: Int) -> Bool {
+      return (row < self.numberRows) && (row >= 0) && (col < self.numberCols) && (col >= 0)
+    }
+
+    subscript(row: Int, col: Int) -> GameObject? {
+			set {
+				guard isOnGrid(row: row, col: col) else {return}
+				grid[row][col] = newValue
+    	}
+        
+			get {
+				guard isOnGrid(row: row, col: col) else {return nil}
+				return grid[row][col]
+			}
+  	}
+	
     // func setWinner(lastTankStanding: Tank){
     //     gameOver = true
     //     lastLivingTank = lastTankStanding
