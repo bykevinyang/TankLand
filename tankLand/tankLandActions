@@ -9,8 +9,17 @@ extension TankLand{
         }
         tank.chargeEnergy(cost)
         tank.setShield(cost * Constants.shieldPowerMultiple)
-	//PRINT STATEMENT FOR DEBUGGING PURPOSES WHILE LOGGER IS DEVELOPED
-print("SHIELD ADDED...\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
+	      //PRINT STATEMENT FOR DEBUGGING PURPOSES WHILE LOGGER IS DEVELOPED
+        print("SHIELD ADDED...\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
         //UPDATE LOGGER HERE
     }
+
+    func runRadar(tank: Tank, radius: Int) {
+      let cost = 
+      //get radius
+      //find the cost of running radar depending on distance
+      //change tank energy
+      //print tank.id Ran it's radar x units
+    }
+
 }

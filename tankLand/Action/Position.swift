@@ -1,4 +1,4 @@
-struct Position: CustomStringConvertible{
+struct Position: CustomStringConvertible, Equatable{
 	var row: Int
   var col: Int
 
@@ -10,5 +10,7 @@ struct Position: CustomStringConvertible{
 	var description: String {
 		return "(\(self.row), \(self.col))"
 	}
+  
+  // might need to add some functions for other shiz later but it's fine rn
   
 }
