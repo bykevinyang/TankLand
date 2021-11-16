@@ -7,4 +7,5 @@ enum ActionType {
   case SendMessage
   case ReceiveMessage
   case SetSheilds
+  case Move
 }

@@ -3,9 +3,9 @@
 - Mine
 - Tank
 - MessageCenter
-- ActionType
 
 - ~~RunRadar~~
+- ~~ActionType~~
 - ~~Direction~~
 - ~~RadarResult~~
 - Position (Add utlities to compute out movement)
