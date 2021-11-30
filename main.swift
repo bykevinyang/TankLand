@@ -8,6 +8,7 @@ test.printGrid()
 test.addGameObject(testGOBJ)
 test.addGameObject(test2)
 test.printGrid()
+test.doSetShield
 
 test.runRadar(tank: testGOBJ, 1)
 

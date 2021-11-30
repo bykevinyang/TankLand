@@ -1,4 +1,3 @@
-// Ask PAL. what action type should be, the below or just preaction, action
 enum ActionType {
   case RunRadar
   case DropRover
@@ -6,6 +5,33 @@ enum ActionType {
 	case SendMissile
   case SendMessage
   case ReceiveMessage
-  case SetSheilds
+  case MissileAction
   case Move
+}
+
+//where you write the methods   extends tankland
+protocol Action: CustomStringConvertible {
+    var  action: ActionType {get}
+    var description: String {get}
+}
+ 
+protocol PreAction: Action{
+}
+ 
+protocol PostAction: Action{
+}
+ 
+struct MoveAction: PostAction{
+    let action: ActionType
+    let distance: Int
+    let direction: Direction
+    var description: String {
+        return "\(action) \(distance) \(direction)"
+    }
+    
+    init(distance: Int, direction: Direction){
+        action = .Move
+        self.distance = distance
+        self.direction = direction
+    }
 }

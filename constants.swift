@@ -13,9 +13,9 @@ struct Constants{
   static let costLifeSupportTank = 100
   static let costLifeSupportRover = 40
   static let costLifeSupportMine = 20
-  static let missleStrikeMultiple = 10
-  static let missleStrikeMultipleCollateral = 3
+  static let missileStrikeMultiple = 10
+  static let missileStrikeMultipleCollateral = 3
   static let mineStrikeMultiple = 5
   static let shieldPowerMultiple = 8
-  static let missleStrikeEnergyTransferFraction = 4
+  static let missileStrikeEnergyTransferFraction = 4
 }

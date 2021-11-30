@@ -1,4 +1,4 @@
-  struct RadarResult: CustomStringConvertible {
+struct RadarResult: CustomStringConvertible {
   let position: Position
 	let id: String
 	let energy: Int
