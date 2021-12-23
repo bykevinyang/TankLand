@@ -1,14 +1,41 @@
-let testGOBJ = GameObject(type: .Tank, id: "TANK1", position: Position(2,3), energy: 100)
-
-let test2 = GameObject(type: .Tank, id: "urMOM", position: Position(2,4), energy: 69420)
+var testTank = Tank(id: "DAD", position: Position(3,4), instructions: "Hi")
+var testTank2 = Tank(id: "BRO", position: Position(7,7), instructions: "Hi")
+var testTank3 = Tank(id: "MOM", position: Position(5,7), instructions: "Hi")
 
 var test = TankLand(15, 15)
 test.printGrid()
 
-test.addGameObject(testGOBJ)
-test.addGameObject(test2)
+test.addGameObject(testTank)
+test.addGameObject(testTank2)
+test.addGameObject(testTank3)
 test.printGrid()
-test.doSetShield
 
-test.runRadar(tank: testGOBJ, 1)
 
+var testShield = ShieldAction(energy: 400)
+test.doSetShieldAction(tank: testTank, shieldAction: testShield)
+print(testTank.shield)
+
+var testRadar = RadarAction(radius: 4)
+print(test.runRadar(tank: testTank, radarAction: testRadar))
+
+var testMineAction = MineAction(power: 100, dropDirection: .North)
+var testMineActionMOM = MineAction(power: 100, dropDirection: .South)
+
+var testRoverAction = MineAction(power: 69, dropDirection: .South)
+
+
+
+test.createMine(tank: testTank, mineAction: testMineAction)
+test.createMine(tank: testTank3, mineAction: testMineActionMOM)
+
+test.createRover(tank: testTank2, mineAction: testRoverAction)
+test.printGrid()
+
+var testMoveAction = MoveAction(distance: 1, direction: .North)
+var testMoveACtionMOM = MoveAction(distance: 1, direction: .East)
+test.move(gameObject: testTank2, action: testMoveAction)
+test.move(gameObject: testTank3, action: testMoveACtionMOM)
+test.printGrid()
+var testMissileAction = MissileAction(energy: 10000, position: Position(7,7))
+test.sendMissile(tank: testTank, missileAction: testMissileAction)
+test.printGrid()

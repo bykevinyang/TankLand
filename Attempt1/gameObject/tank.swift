@@ -5,6 +5,7 @@ class Tank: GameObject {
     var preActions = [ActionType:PreAction]()
     var postActions = [ActionType:PostAction]()
     var instructions: String
+		
     init(id: String, position: Position = Position(0, 0), instructions: String = "") {
         self.instructions = instructions
         super.init(type: .Tank, id: id, position: position, energy: Constants.initialTankEnergy)
@@ -34,12 +35,11 @@ class Tank: GameObject {
     final func addPostAction(postAction: PostAction) {
         postActions[postAction.action] = postAction
     }
-    
+ 
     func computePreActions() {
-        
+
     }
-    
     func computePostActions() {
-        
+
     }
 }

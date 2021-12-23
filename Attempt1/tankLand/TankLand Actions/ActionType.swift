@@ -1,5 +1,5 @@
 enum ActionType {
-  case RunRadar
+  case RadarAction
   case DropRover
 	case DropMine
 	case SendMissile
@@ -7,7 +7,10 @@ enum ActionType {
   case ReceiveMessage
   case MissileAction
   case Move
+  case ShieldAction
 }
+
+
 
 //where you write the methods   extends tankland
 protocol Action: CustomStringConvertible {
@@ -19,19 +22,4 @@ protocol PreAction: Action{
 }
  
 protocol PostAction: Action{
-}
- 
-struct MoveAction: PostAction{
-    let action: ActionType
-    let distance: Int
-    let direction: Direction
-    var description: String {
-        return "\(action) \(distance) \(direction)"
-    }
-    
-    init(distance: Int, direction: Direction){
-        action = .Move
-        self.distance = distance
-        self.direction = direction
-    }
 }

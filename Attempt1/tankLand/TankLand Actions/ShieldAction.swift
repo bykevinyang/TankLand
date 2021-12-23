@@ -1,15 +1,19 @@
-struct ShieldAction {
+struct ShieldAction : PreAction {
+  var action: ActionType
 	var power: Int	
 	var energy: Int
-
+  var description: String {
+    return("hi")
+  }
   init (energy: Int) {
+    self.action = .ShieldAction
 		self.energy = energy
     self.power = energy * Constants.shieldPowerMultiple
   }
 }
 
 extension TankLand {
-  func doSetShieldAction(tank: Tank, shieldAction: ShieldAction) {
+  func doSetShieldAction(tank: Tank, shieldAction: ShieldAction) {  
         let cost = shieldAction.energy
         guard tank.energy > cost else {
             print("SHIELD FAILED...\(tank.id) DOES NOT HAVE ENOUGH ENERGY")

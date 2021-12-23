@@ -62,18 +62,6 @@ class TankLand {
 			self[gameObject.position.row, gameObject.position.col] = gameObject
 			// Add logger message here!
 		}
-    
-   
-    // func doTurn(){
-    //     var allObjects = findAllGameObjects()
-    //     allObjects = randomizeGameObjects(gameObjects: allObjects)
-        
- 	//all the code needed to run a single turn goes here
-//many for loops as we will discuss in class
-    //     turn += 1
-    // }
-    
-   
 //     func runGame(){
 //         populateTankLand()
 //         printGrid()
@@ -82,4 +70,87 @@ class TankLand {
 // }
 //         print("****Winner is...\(lastLivingTank!)")
 //     }
+	func getAllObjects() -> ([Tank], [Mine], [Rover]) {
+		var tanks : [Tank] = []
+		var mines : [Mine] = []
+		var rovers : [Rover] = []
+		for r in 0..<self.numberRows {
+      for c in 0..<self.numberCols {
+        if let object = self[r,c] {
+          if object.type == .Tank {
+						let tank = object as! Tank
+            tanks.append(tank)
+          } else if object.type == .Rover {
+						let rover = object as! Rover
+						rovers.append(rover)
+					} else if object.type == .Mine {
+						let mine = object as! Mine
+					  mines.append(mine)
+          } else {
+            ()
+          }
+        }
+      }
+	  }
+		return (tanks, mines, rovers)
+  }
+
+  func doTurn() {
+    // Charge life support
+		let objects = getAllObjects()		// Returns tuple of ([Tanks], [Mine], [Rover])
+		for tank in objects.0 {
+ 			tank.chargeEnergy(Constants.costLifeSupportTank)
+		}
+		for mine in objects.1 {
+			mine.chargeEnergy(Constants.costLifeSupportMine)
+		}
+		for rover in objects.2 {
+			rover.chargeEnergy(Constants.costLifeSupportRover)
+		}
+
+		// Move the rovers
+    let livingRovers = objects.2
+    for r in livingRovers {
+			//fakeMoveAction = MoveAction(distance: 2, direction: .North)
+			print(r)
+			//move(r, fakeMoveAction, rover: true)
+			// Move the rover
+		}
+
+		// Do Pre-Actions
+		for tank in objects.0 {
+			for (actionType, preAction) in tank.preActions {
+				
+			}
+		}
+
+		// Do Post-Actions  
+    for tank in objects.0 {
+			tank.computePostActions()
+		}
+	}
+
+
+		// let actionsToFunc [
+		// .RadarAction: self.runRader,
+		// .DropRover: self.DropRover,
+		// .DropMine: self.DropMine,
+		// .SendMissile: self.SendMissile,
+		//		// .SendMessage
+		// .Move: self.move,
+		// .ShieldAction: self.doSetShieldAction
+		// ]
+
+// enum ActionType {
+//   case RadarAction
+//   case DropRover
+// 	case DropMine
+// 	case SendMissile
+//   case SendMessage
+//   case ReceiveMessage
+//   case MissileAction
+//   case Move
+//   case ShieldAction
+// }
+
 }

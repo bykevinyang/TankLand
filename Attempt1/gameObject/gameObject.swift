@@ -15,7 +15,6 @@ class GameObject: CustomStringConvertible {
         self.position = position
         self.energy = energy
     }
-    
     final func chargeEnergy(_ amount: Int) {
         self.energy -= amount
     }
