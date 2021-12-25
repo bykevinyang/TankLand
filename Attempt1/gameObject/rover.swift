@@ -10,7 +10,7 @@ class Rover: Mine {
 		self.mA = mineAction
 		self.sender = sender
 		super.init(sender: self.sender, mineAction: self.mA) 
-		let type = GameObjectType.Rover
+		//let type = GameObjectType.Rover
 		self.mineAction = mineAction
 		if randomMove == true {
 			super.mineAction.moveDirection = randomDirection
@@ -21,7 +21,7 @@ class Rover: Mine {
 
 extension TankLand {
 	func createRover(tank: Tank, mineAction: MineAction) {
-		var rover = Rover(sender: tank, mineAction: mineAction)
+		let rover = Rover(sender: tank, mineAction: mineAction)
 		self.addGameObject(rover)
 	}
 }

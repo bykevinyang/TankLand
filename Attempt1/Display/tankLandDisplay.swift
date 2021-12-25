@@ -16,12 +16,12 @@ extension TankLand: CustomStringConvertible {
 
 				for c in 0..<self.numberCols {
 					let gameObj = self[r, c]
-					var printLine1 = ""
+					//var printLine1 = ""
 					
 					if let val = gameObj {
 						let energy = val.energy
 						let id = val.id
-						let pos = val.position
+						//let pos = val.position
 
 						printLines[0].append("|" + fitI(energy, 7, right: true))
 						printLines[1].append("|" + fit(id, 7, right: true))

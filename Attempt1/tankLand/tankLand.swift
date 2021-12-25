@@ -6,6 +6,10 @@
 //TankLandActions contains the code that implements the actions; the most complex code in TankLand
 
 class TankLand {
+  var ogROW: Int = 0
+  var ogCOL: Int = 0
+  var nextROW: Int = 0
+  var nextCOL: Int = 0
     var grid: [[GameObject?]]
     var turn : Int
 		let numberCols: Int
@@ -117,17 +121,17 @@ class TankLand {
 			// Move the rover
 		}
 
-		// Do Pre-Actions
-		for tank in objects.0 {
-			for (actionType, preAction) in tank.preActions {
+		// // Do Pre-Actions
+		// for tank in objects.0 {
+		// 	for (actionType, preAction) in tank.preActions {
 				
-			}
-		}
+		// 	}
+		// }
 
-		// Do Post-Actions  
-    for tank in objects.0 {
-			tank.computePostActions()
-		}
+		// // Do Post-Actions  
+    // for tank in objects.0 {
+		// 	tank.computePostActions()
+		// }
 	}
 
 

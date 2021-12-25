@@ -77,7 +77,8 @@ struct MineAction: PostAction {
 		
 extension TankLand {
 	func createMine(tank: Tank, mineAction: MineAction) {
-		var mine = Mine(sender: tank, mineAction: mineAction)
+		let mine = Mine(sender: tank, mineAction: mineAction)
 		self.addGameObject(mine)
+    print("\(tank) dropped a mine")
 	}
 }

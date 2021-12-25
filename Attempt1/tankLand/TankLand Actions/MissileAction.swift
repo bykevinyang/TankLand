@@ -1,3 +1,5 @@
+import Foundation
+
 struct MissileAction {
   var energy: Int
   // var sendersender: GameObject
@@ -14,7 +16,15 @@ struct MissileAction {
 
 extension TankLand {
   func sendMissile(tank: Tank, missileAction: MissileAction ) {
-      let cost = missileAction.energy
+      //calculating distance
+      var distance: Int = 0
+      distance += (missileAction.position.row - tank.position.row) * (missileAction.position.row - tank.position.row)
+      distance += (missileAction.position.col - tank.position.col) * (missileAction.position.col - tank.position.col)
+      var distanceAsDouble: Double = 0
+      distanceAsDouble = sqrt(distanceAsDouble)
+      distance = Int(distanceAsDouble)
+      //calculating cost
+      let cost = Constants.costOfLaunchingMissile + distance * 200
       guard tank.energy > cost else {
             print("SHIELD FAILED...\(tank.id) DOES NOT HAVE ENOUGH ENERGY")
             return
@@ -24,30 +34,29 @@ extension TankLand {
 			// ADD IN DAMAGING PART FOR SENDMISSILE
       let currentRow = missileAction.position.row
 		  let currentCol = missileAction.position.col
+      print("\(tank) sent a missile to \(missileAction.position) and used \(cost) energy")
       for rowShift in -1...1 {
 				for colShift in -1...1 {
 					if let object = self[currentRow + rowShift, currentCol + colShift] {
 						if object.position == missileAction.position{
-							let damage = cost*Constants.missileStrikeMultiple
-              var ogEnergy = object.energy
+              let ogEnergy = object.energy
+							let damage = missileAction.energy * Constants.missileStrikeMultiple
 							object.chargeEnergy(damage)
+              //removes GO from grid is it has <=0 energy
               if object.energy <= 0 {
-                self[rowShift, colShift] = nil
+                self[missileAction.position.row, missileAction.position.col] = nil
                 tank.gainEnergy(ogEnergy / 4)
+							  print("\(object) was hit with direct \(damage) and died")	
               }
-              print("\(tank) sent a missile to \(missileAction.position)")
-							print("\(object) was hit with direct \(damage)")	
-						}
-						else {
+						} else {
 							let damage = cost*Constants.missileStrikeMultipleCollateral
-              var ogEnergy = object.energy
+              let ogEnergy = object.energy
 							object.chargeEnergy(damage)	
               if object.energy <= 0 {
-                self[rowShift, colShift] = nil
+                self[currentRow + rowShift, currentCol + colShift] = nil
                 tank.gainEnergy(ogEnergy / 4)
+							  print("\(object) was hit with collatral \(damage) and died")	
               }
-              print("\(tank) sent a missile to \(missileAction.position)")
-							print("\(object) was hit with collatral \(damage)")	
 						}
 					}
 				}

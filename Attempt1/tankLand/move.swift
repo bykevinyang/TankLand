@@ -13,6 +13,61 @@ struct MoveAction: PostAction{
         self.direction = direction
     }
 }
+
+//ethan's also funky move func
+func outOfBounds(row: Int, col: Int) -> Bool {
+  if ((row > 0 && row < 14) || row == 0 || row == 14) && ((col > 0 && col < 14) || col == 0 || col == 14) {
+    return false
+  } else {
+    return true
+  }
+}
+
+extension TankLand {
+  func move(gameObject: GameObject, action : MoveAction) {
+    if gameObject.type == .Tank {
+      ogROW = gameObject.position.row
+      ogCOL = gameObject.position.col
+  
+      nextROW += (DirectionToVectorMove[action.direction]!.0 * action.distance + ogROW)
+      nextCOL += (DirectionToVectorMove[action.direction]!.1 * action.distance + ogCOL)
+      //checks if new coor is out of bounds
+        if outOfBounds(row: nextROW, col: nextCOL) == true {
+          print("Cannot move because it's out of bounds")
+        } else {
+          //checks if there's already a GO in the new coor
+          if let occupyingGO = self[nextROW, nextCOL] {
+            print("hi")
+            //if it's a tank, tank will not move
+            if occupyingGO.type == .Tank {
+              print("Cannot move becase there is a tank in the spot")
+            //if it's a mine, tank will move and take dmg  
+            } else if occupyingGO.type == .Mine {
+              self[nextROW, nextCOL] = gameObject
+              self[ogROW, ogCOL] = nil
+              gameObject.setPosition(Position(nextROW, nextCOL))
+              let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[action.distance]
+              gameObject.chargeEnergy(damageTaken)
+              print("\(gameObject) moved to \(nextROW),\(nextCOL) and took \(damageTaken) damage")
+            } else {
+              ()
+            }
+          } else {
+            self[ogROW, ogCOL] = nil
+            self[nextROW, nextCOL] = gameObject
+            gameObject.setPosition(Position(nextROW, nextCOL))
+            print("\(gameObject) moved to \(nextROW),\(nextCOL)")
+          }
+        }
+      ogCOL = 0
+      ogROW = 0
+      nextCOL = 0
+      nextROW = 0
+    }
+  }
+}
+
+
 //kevin's funky move func
 
 // extension TankLand {
@@ -56,108 +111,3 @@ struct MoveAction: PostAction{
 // 		}
 // 	}
 // }
-
-//ethan's also funky move func
-extension TankLand{
-  func move(gameObject: GameObject, action: MoveAction) {
-
-        //if let unwrappedGO = gameObject {
-          //changes position of tank
-          if gameObject.type == .Tank {
-            //checck the different directions it can move
-            if action.direction == .North {
-              var ogROW = gameObject.position.row
-              var ogCOL = gameObject.position.col
-              var ugoROW = gameObject.position.row
-              var ugoCOL = gameObject.position.col
-              ugoROW -= action.distance
-              
-              //first checks if row is possible
-              if ((ugoROW > 0 && ugoROW < 14) || ugoROW == 0 || ugoROW == 14) {
-                //then checks if col is possible
-                if ((ugoCOL > 0 && ugoCOL < 14) || ugoCOL == 0 || ugoCOL == 14) {
-                  //then checks if there is something already in the spot the tank is about to move into
-                  if let something = self[ugoROW, ugoCOL] {
-                    //if yes, tank does not move
-                    if something.type == .Mine {
-                      var somethingAsMine = something as! Mine
-                      gameObject.chargeEnergy(somethingAsMine.energy * Constants.mineStrikeMultiple)
-                      print("\(gameObject) took \(somethingAsMine.energy * Constants.mineStrikeMultiple) damage")
-                      self[ugoROW, ugoCOL] = nil
-                      self[ogROW, ogCOL] = nil
-                      self[ugoROW, ugoCOL] = gameObject
-                      gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[action.distance])
-                    } else if something.type == .Tank {
-                      ()
-                    }
-                    print("Cannot move to row:\(ugoROW), col:\(ugoCOL)")
-                  } else {
-                    //if no, tank moves
-                    self[ogROW, ogCOL] = nil
-                    self[ugoROW, ugoCOL] = gameObject
-                    gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[action.distance])
-                    gameObject.setPosition(Position(ugoROW, ugoCOL))
-                  }
-                }
-              }
-            } else if action.direction == .East {
-              // so on and so forth
-              var ogROW = gameObject.position.row
-              var ogCOL = gameObject.position.col
-              var ugoROW = gameObject.position.row
-              var ugoCOL = gameObject.position.col
-              ugoCOL += action.distance
-              
-              //first checks if row is possible
-              if ((ugoROW > 0 && ugoROW < 14) || ugoROW == 0 || ugoROW == 14) {
-                //then checks if col is possible
-                if ((ugoCOL > 0 && ugoCOL < 14) || ugoCOL == 0 || ugoCOL == 14) {
-                  //then checks if there is something already in the spot the tank is about to move into
-                  if let something = self[ugoROW, ugoCOL] {
-                    //if yes, tank does not move
-                    if something.type == .Mine {
-                      var somethingAsMine = something as! Mine
-                      gameObject.chargeEnergy(somethingAsMine.energy * Constants.mineStrikeMultiple)
-                      print("\(gameObject) took \(somethingAsMine.energy * Constants.mineStrikeMultiple) damage")
-                      self[ugoROW, ugoCOL] = nil
-                      self[ogROW, ogCOL] = nil
-                      self[ugoROW, ugoCOL] = gameObject
-                      gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[action.distance])
-                    } else if something.type == .Tank {
-                      ()
-                    }
-                    print("Cannot move to row:\(ugoROW), col:\(ugoCOL)")
-                  } else {
-                    self[ogROW, ogCOL] = nil
-                    self[ugoROW, ugoCOL] = gameObject
-                    gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[action.distance])
-                    gameObject.setPosition(Position(ugoROW, ugoCOL))
-                  }
-                }
-              }
-            } else {
-							
-						}
-
-  	//} else if gameObject.type = .Rover {
-
-    //}
-	}
-  }
-	func roverMove(gameObject: GameObject) {
-		if gameObject.type == .Rover {
-			let rover = gameObject as! Rover
-			if let roverDirection = rover.mineAction.moveDirection {
-				let moveAction = MoveAction(distance: 1, direction: roverDirection)
-				move(gameObject: gameObject, action: moveAction)
-        // if ((ugoROW > 0 && ugoROW < 14) || ugoROW == 0 || ugoROW == 14) {
-        //   //then checks if col is possible
-        //   if ((ugoCOL > 0 && ugoCOL < 14) || ugoCOL == 0 || ugoCOL == 14) {
-            
-        //   }
-        // }  
-			}
-		}
-	}
-	
-}

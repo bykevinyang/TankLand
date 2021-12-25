@@ -6,7 +6,7 @@ struct Constants{
   static let costOfReceivingMessage = 100
   static let costOfReleasingMine = 250
   static let costOfReleasingRover = 500
-  static let costOfLaunchingMissle = 1000
+  static let costOfLaunchingMissile = 1000
   static let costOfFlyingMissilePerUnitDistance = 200
   static let costOfMovingTankPerUnitDistance = [100, 300, 600]
   static let costOfMovingRover = 50
