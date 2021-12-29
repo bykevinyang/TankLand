@@ -45,6 +45,7 @@ var shieldAction = ShieldAction(energy: 400)
 var moveAction = MoveAction(distance: 100, direction: .East)
 var moveAction2 = MoveAction(distance: 1, direction: .West)
 var missileAction = MissileAction(energy: 80000, position: Position(7,7))
+
 //make the tanks do the action structs
 test.doSetShieldAction(tank: testTank, shieldAction: shieldAction)
 test.createMine(tank: testTank, mineAction: mineAction)
@@ -54,3 +55,4 @@ test.move(gameObject: testTank3, action: moveAction2)
 test.sendMissile(tank: testTank, missileAction: missileAction)
 
 test.printGrid()
+print(test)
