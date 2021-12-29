@@ -79,6 +79,7 @@ extension TankLand {
 	func createMine(tank: Tank, mineAction: MineAction) {
 		let mine = Mine(sender: tank, mineAction: mineAction)
 		self.addGameObject(mine)
-    print("\(tank) dropped a mine")
+    tank.chargeEnergy(Constants.costOfReleasingMine)
+    print("\(tank) dropped a mine abd was charged \(Constants.costOfReleasingMine) energy")
 	}
 }
