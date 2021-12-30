@@ -1,54 +1,34 @@
 //create board
 var test = TankLand(15,15)
 //create tanks
-var testTank = Tank(id: "T1", position: Position(1,2), instructions: "rn")
-var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
-var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
+var testTank = Tank(id: "T1", position: Position(6,0), instructions: "rn")
+// var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
+// var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
 //add tanks to boardtest.addGameObject(testTank)
+//test.addGameObject(testTank)
+//test.addGameObject(testTank2)
+//test.addGameObject(testTank3)
+//create some action structs
+
+// var mineAction = MineAction(power: 100, dropDirection: .North)
+// var mineAction2 = MineAction(power: 100, dropDirection: .South)
+// var shieldAction = ShieldAction(energy: 400)
+// var moveAction = MoveAction(distance: 2, direction: .East)
+// var moveAction2 = MoveAction(distance: 1, direction: .West)
+// var missileAction = MissileAction(energy: 80000, position: Position(7,7))
+
+// var roverMineAction = MineAction(power: 100, isRover: true, dropDirection: .NorthEast)
+
+let smplTank = SmplTank(id: "TSIMP", position: Position(6,2), instructions: "Hi")
 test.addGameObject(testTank)
-test.addGameObject(testTank2)
-test.addGameObject(testTank3)
-test.printGrid()
-
-//some pre actions
-var shieldAction = ShieldAction(energy: 400)
-var radarAction = RadarAction(radius: 3)
-// do those pre actions
-test.doSetShieldAction(tank: testTank, shieldAction: shieldAction)
-test.doSetShieldAction(tank: testTank2, shieldAction: shieldAction)
-test.doSetShieldAction(tank: testTank3, shieldAction: shieldAction)
-
-
-//some post actions
-var mineAction = MineAction(power: 100, dropDirection: .North)
-var mineAction2 = MineAction(power: 100, dropDirection: .South)
-var moveAction = MoveAction(distance: 2, direction: .East)
-var moveAction2 = MoveAction(distance: 1, direction: .West)
-var missileAction = MissileAction(energy: 80000, position: Position(7,7))
-var roverAction = MineAction(power: 100, isRover: true, dropDirection: .NorthEast)
-var roverAction2 = MineAction(power: 100, isRover: true, dropDirection: .SouthEast,  moveDirection: .South)
-var roverAction3 = MineAction(power: 100, isRover: true, dropDirection: .West,  moveDirection: .West)
-
-//
-let rover = test.createRover(tank: testTank2, mineAction: roverAction, randomMove: true)
-let rover2 = test.createRover(tank: testTank, mineAction: roverAction2, randomMove: false)
-let rover3 = test.createRover(tank: testTank2, mineAction: roverAction3, randomMove: false)
-test.printGrid()
-
-//we have some unwrapping or index out of bounds, at least i think
-//let me merge my code - should take like 5 mins i hope
-
-
-
-
-print("here")
-test.move(gameObject: rover2, action: nil)
-let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
 test.addGameObject(smplTank)
+test.printGrid()
+test.doTurn()
+test.printGrid()
 test.doTurn()
 test.printGrid()
 
-
-// print("Rover should have been created")
-// test.printGrid()
-// print(rover)
+for i in 0..<3 {
+	test.doTurn()
+	test.printGrid()
+}

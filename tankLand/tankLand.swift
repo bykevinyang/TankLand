@@ -114,46 +114,64 @@ class TankLand {
         print(r)
         self.move(gameObject: r, action: nil)
         self.printGrid()
-	}
+		}
 
     typealias PreActionFunc = (Tank, PreAction) -> Any
 
-	let preactionsToFunc: [ActionType: PreActionFunc] = [
-		ActionType.RadarAction: self.runRadar,
-		// ActionType.DropRover: self.createRover,
-		// ActionType.SendMissile: self.sendMissile,
-		// ActionType.Move: self.move,
-		// ActionType.ShieldAction: self.doSetShieldAction
-	]
+		let preactionsToFunc: [ActionType: PreActionFunc] = [
+			ActionType.RadarAction: self.runRadar,
+			// ActionType.SendMissile: self.sendMissile,
+			// ActionType.ShieldAction: self.doSetShieldAction
+		]
 
     let postactionsToFunc: [ActionType: (Tank, PostAction) -> Any] = [
-        ActionType.DropMine: self.createMine,
+        ActionType.DropMine: self.dropMine,
+				ActionType.Move: self.move,
+				ActionType.DropRover: self.dropRover
     ]
 
+		// Compute PreActions
     for tank in objects.0 {
         for tank in objects.0 {
             tank.computePreActions()
+        }
+    }
+
+    // Do PreActions
+    for tank in objects.0 {
+    	for (actionType, preAction) in tank.preActions {
+					if let actionFunc = preactionsToFunc[actionType] {
+							let result = actionFunc(tank, preAction)
+					}
+    	}
+    }
+
+		// Compute PostActions
+    for tank in objects.0 {
+        for tank in objects.0 {
             tank.computePostActions()
         }
     }
 
-    // Do Pre-Actions
-    for tank in objects.0 {
-    	for (actionType, preAction) in tank.preActions {
-            if let actionFunc = preactionsToFunc[actionType] {
-                let result = actionFunc(tank, preAction)
-            }
-    	}
-    }
-
-    // Do Post-Actions
+    // Do PostActions
     for tank in objects.0 {
     	for (actionType, postAction) in tank.postActions {
-            if let actionFunc = postactionsToFunc[actionType] {
-                let result = actionFunc(tank, postAction)
-            }
+					if let actionFunc = postactionsToFunc[actionType] {
+							let result = actionFunc(tank, postAction)
+					}
     	}
-    }
-
-    }
+   }
+    
+		// Clear Post and Preactions 
+    for tank in objects.0 {
+				print("Before Clear")	
+				print(tank.preActions)
+				print(tank.postActions)
+				print("After Clear")
+				tank.preActions.removeAll()
+				tank.postActions.removeAll()
+				print(tank.preActions)
+				print(tank.postActions)
+			}
+   	}
 }

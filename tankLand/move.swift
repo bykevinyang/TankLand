@@ -14,10 +14,12 @@ struct MoveAction: PostAction{
     }
 }
 extension TankLand {
-  func checkLife(gameObject: GameObject) {
+  func checkLife(gameObject: GameObject) -> Bool {
     if gameObject.energy <= 0 {
-      self[gameObject.position.row, gameObject.position.col] = nil
-    }
+			return false
+    } else {
+			return true
+		}
   }
 }
 
@@ -33,10 +35,12 @@ func outOfBounds(row: Int, col: Int) -> Bool {
 extension TankLand {
     // Move function for all gameobjects.
     // Takes in an action, will return a bool on the success of that move
-  func move(gameObject: GameObject, action : MoveAction? = nil) -> Bool{
+  func move(gameObject: GameObject, action : PostAction? = nil) -> Bool {
+
     var ogGameObject: GameObject = gameObject
     if gameObject.type == .Tank && action != nil {
-      let moveAction: MoveAction = action!
+			let postAction = action
+      let moveAction: MoveAction = postAction as! MoveAction
 
       ogROW = gameObject.position.row // Orginal row
       ogCOL = gameObject.position.col // Orginal col
@@ -61,7 +65,10 @@ extension TankLand {
               let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[moveAction.distance]
               gameObject.chargeEnergy(damageTaken)
               print("\(gameObject.id) moved to \(nextROW),\(nextCOL) and took \(damageTaken) damage")
-              checkLife(gameObject: gameObject)
+              
+              if checkLife(gameObject: gameObject) == false {
+                self[gameObject.position.row, gameObject.position.col] = nil
+              }
             } else {
               ()
             }
@@ -70,6 +77,9 @@ extension TankLand {
             self[nextROW, nextCOL] = gameObject
             gameObject.setPosition(Position(nextROW, nextCOL))
             print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+            if checkLife(gameObject: gameObject) == false {
+              self[gameObject.position.row, gameObject.position.col] = nil
+            }
           }
         }
       ogCOL = 0
@@ -96,7 +106,9 @@ extension TankLand {
                     occupyingGO.chargeEnergy(gameObject.energy * Constants.mineStrikeMultiple)
                     self[ogROW, ogCOL] = nil
                     print("\(gameObject.id) hit a tank and died")
-                    checkLife(gameObject: occupyingGO)
+                    if !checkLife(gameObject: occupyingGO) {
+											self[nextROW, nextCOL] = nil
+										}
                     if self[nextROW, nextCOL] == nil {
                       print("\(occupyingGO.id) died")
                     }
@@ -115,6 +127,7 @@ extension TankLand {
                 self[nextROW, nextCOL] = gameObject
                 gameObject.setPosition(Position(nextROW, nextCOL))
                 print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+                checkLife(gameObject: gameObject)
             }
         }
         ogCOL = 0
