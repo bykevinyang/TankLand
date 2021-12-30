@@ -24,16 +24,22 @@ func outOfBounds(row: Int, col: Int) -> Bool {
 }
 
 extension TankLand {
-  func move(gameObject: GameObject, action : MoveAction) {
-    if gameObject.type == .Tank {
-      ogROW = gameObject.position.row
-      ogCOL = gameObject.position.col
+    // Move function for all gameobjects.
+    // Takes in an action, will return a bool on the success of that move
+  func move(gameObject: GameObject, action : MoveAction? = nil) -> Bool{
+
+    if gameObject.type == .Tank && action != nil {
+      let moveAction: MoveAction = action!
+
+      ogROW = gameObject.position.row // Orginal row
+      ogCOL = gameObject.position.col // Orginal col
   
-      nextROW += (DirectionToVectorMove[action.direction]!.0 * action.distance + ogROW)
-      nextCOL += (DirectionToVectorMove[action.direction]!.1 * action.distance + ogCOL)
+      nextROW += (DirectionToVectorMove[moveAction.direction]!.0 * moveAction.distance + ogROW)
+      nextCOL += (DirectionToVectorMove[moveAction.direction]!.1 * moveAction.distance + ogCOL)
+
       //checks if new coor is out of bounds
         if outOfBounds(row: nextROW, col: nextCOL) == true {
-          print("Cannot move because it's out of bounds")
+          print("\(gameObject.id): Cannot move because it's out of bounds")
         } else {
           //checks if there's already a GO in the new coor
           if let occupyingGO = self[nextROW, nextCOL] {
@@ -46,13 +52,13 @@ extension TankLand {
               self[nextROW, nextCOL] = gameObject
               self[ogROW, ogCOL] = nil
               gameObject.setPosition(Position(nextROW, nextCOL))
-              let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[action.distance]
+              let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[moveAction.distance]
               gameObject.chargeEnergy(damageTaken)
               print("\(gameObject) moved to \(nextROW),\(nextCOL) and took \(damageTaken) damage")
             } else {
               ()
             }
-          } else {
+          } else { 
             self[ogROW, ogCOL] = nil
             self[nextROW, nextCOL] = gameObject
             gameObject.setPosition(Position(nextROW, nextCOL))
@@ -63,7 +69,47 @@ extension TankLand {
       ogROW = 0
       nextCOL = 0
       nextROW = 0
-    }
+    } else if gameObject.type == .Rover {
+        ogROW = gameObject.position.row // Orginal row
+        ogCOL = gameObject.position.col // Orginal col
+
+        let rover = gameObject as! Rover
+
+        nextROW += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.0 + ogROW)
+        nextCOL += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.1 + ogCOL)
+        print("Random direction is \(rover.mineAction.moveDirection)")
+
+        //checks if new coor is out of bounds
+        if outOfBounds(row: nextROW, col: nextCOL) == true {
+            print("Cannot move because it's out of bounds")
+        } else {
+            //checks if there's already a GO in the new coor
+            if let occupyingGO = self[nextROW, nextCOL] {
+                //if it's a tank, tank will not move
+                if occupyingGO.type == .Tank {
+                    print("\(gameObject.id): Cannot move becase there is a tank in the spot")
+                //if it's a mine, tank will move and take dmg  
+                    } else if occupyingGO.type == .Mine || occupyingGO.type == .Rover { // Ask Mr.P if we rovers can explode other rovers
+                    self[nextROW, nextCOL] = gameObject
+                    self[ogROW, ogCOL] = nil
+                    gameObject.setPosition(Position(nextROW, nextCOL))
+                    let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[1]
+                    gameObject.chargeEnergy(damageTaken)
+                    print("\(gameObject) moved to \(nextROW),\(nextCOL) and took \(damageTaken) damage")
+                }
+            } else { 
+                self[ogROW, ogCOL] = nil
+                self[nextROW, nextCOL] = gameObject
+                gameObject.setPosition(Position(nextROW, nextCOL))
+                print("\(gameObject) moved to \(nextROW),\(nextCOL)")
+            }
+        }
+        ogCOL = 0
+        ogROW = 0
+        nextCOL = 0
+        nextROW = 0
+        }
+    return false
   }
 }
 
