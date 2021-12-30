@@ -92,9 +92,14 @@ struct MineAction: PostAction {
 extension TankLand {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	func dropMine(tank: Tank, mineAction: PostAction) -> Bool {
 		if tank.energy > Constants.costOfReleasingMine {
 		let mineAct = mineAction as! MineAction
+=======
+	func createMine(tank: Tank, mineAction: PostAction) -> Bool {
+        let mineAct = mineAction as! MineAction
+>>>>>>> origin/main
 =======
 	func createMine(tank: Tank, mineAction: PostAction) -> Bool {
         let mineAct = mineAction as! MineAction
@@ -109,12 +114,17 @@ extension TankLand {
         tank.chargeEnergy(Constants.costOfReleasingMine)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         print("\(tank.id) dropped mine \(mine.id) and was charged \(Constants.costOfReleasingMine) energy")
 		return true
 		} else {
 			print("\(tank.id) unable to drop mine b/c it does not have enough energy")	
 			return false
 		}
+=======
+        print("\(tank) dropped a mine abd was charged \(Constants.costOfReleasingMine) energy")
+        return true
+>>>>>>> origin/main
 =======
         print("\(tank) dropped a mine abd was charged \(Constants.costOfReleasingMine) energy")
         return true

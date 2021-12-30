@@ -3,6 +3,7 @@ import Foundation
 class SmplTank : Tank {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   var turn = 0
 
   override func computePreActions() {
@@ -20,11 +21,16 @@ class SmplTank : Tank {
 =======
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> origin/main
   override func computePreActions() {
     if self.energy > 500 {
         addPreAction(preAction: RadarAction(radius: 2))
         addPostAction(postAction: MineAction(power: 100))
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
 =======
 >>>>>>> origin/main
