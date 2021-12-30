@@ -1,7 +1,7 @@
 //create board
 var test = TankLand(15,15)
 //create tanks
-var testTank = Tank(id: "T1", position: Position(1,2), instructions: "Hi")
+var testTank = Tank(id: "T1", position: Position(1,2), instructions: "rn")
 var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
 var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
 //add tanks to boardtest.addGameObject(testTank)
@@ -47,6 +47,11 @@ test.move(gameObject: rover2, action: nil)
 // test.printGrid()
 // test.move(gameObject: rover2, action: moveAction)
 // test.printGrid()
+
+let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
+test.addGameObject(smplTank)
+test.doTurn()
+test.printGrid()
 // print("Rover should have been created")
 // test.printGrid()
 // print(rover)

@@ -20,15 +20,25 @@ class Rover: Mine {
 }
 
 extension TankLand {
-	func createRover(tank: Tank, mineAction: MineAction, randomMove: Bool = false) -> Rover {
+	func dropRover(tank: Tank, mineAction: PostAction) -> Bool {
 	  if tank.energy > Constants.costOfReleasingRover {
       tank.chargeEnergy(Constants.costOfReleasingRover)
-      let rover = Rover(sender: tank, mineAction: mineAction, randomMove: randomMove)
+			let dropAction = mineAction as! MineAction
+			
+			let randomMove: Bool
+			if dropAction.moveDirection == nil {
+					randomMove = true
+			} else {
+					randomMove = false
+			}
+
+			let rover = Rover(sender: tank, mineAction: dropAction, randomMove: randomMove)
       print("\(tank.id) created rover \(rover.id) and was charged \(Constants.costOfReleasingRover) energy")
-      self.addGameObject(rover)  
-    } else {
+			self.addGameObject(rover)
+			return true
+		} else {
       print("\(tank) does not have enough energy to create a rover")
-    }
-    return rover
+			return false
+		}
 	}
 } 
