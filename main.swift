@@ -35,23 +35,20 @@ let rover2 = test.createRover(tank: testTank, mineAction: roverAction2, randomMo
 let rover3 = test.createRover(tank: testTank2, mineAction: roverAction3, randomMove: false)
 test.printGrid()
 
-we have some unwrapping or index out of bounds, at least i think
-let me merge my code - should take like 5 mins i hope
+//we have some unwrapping or index out of bounds, at least i think
+//let me merge my code - should take like 5 mins i hope
 
-indeed
+
+
 
 print("here")
 test.move(gameObject: rover2, action: nil)
-//test.move(gameObject: rover, action: nil)
-// test.move(gameObject: rover3, action: moveAction2)
-// test.printGrid()
-// test.move(gameObject: rover2, action: moveAction)
-// test.printGrid()
-
 let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
 test.addGameObject(smplTank)
 test.doTurn()
 test.printGrid()
+
+
 // print("Rover should have been created")
 // test.printGrid()
 // print(rover)

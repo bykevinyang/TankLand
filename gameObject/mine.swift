@@ -81,8 +81,7 @@ struct MineAction: PostAction {
 		
 extension TankLand {
 	func createMine(tank: Tank, mineAction: PostAction) -> Bool {
-    let mineAct = mineAction as! MineAction
-        
+    let mineAct = mineAction as! MineAction        
 		let mine = Mine(sender: tank, mineAction: mineAct)
 		self.addGameObject(mine)
         tank.chargeEnergy(Constants.costOfReleasingMine)
