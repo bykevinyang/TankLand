@@ -1,9 +1,15 @@
 //create board
 var test = TankLand(15,15)
 //create tanks
+<<<<<<< HEAD
 var testTank = Tank(id: "T1", position: Position(6,0), instructions: "rn")
 // var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
 // var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
+=======
+var testTank = Tank(id: "T1", position: Position(1,2), instructions: "rn")
+var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
+var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
+>>>>>>> origin/main
 //add tanks to boardtest.addGameObject(testTank)
 //test.addGameObject(testTank)
 //test.addGameObject(testTank2)
@@ -19,10 +25,25 @@ var testTank = Tank(id: "T1", position: Position(6,0), instructions: "rn")
 
 // var roverMineAction = MineAction(power: 100, isRover: true, dropDirection: .NorthEast)
 
+<<<<<<< HEAD
 let smplTank = SmplTank(id: "TSIMP", position: Position(6,2), instructions: "Hi")
 test.addGameObject(testTank)
 test.addGameObject(smplTank)
 test.printGrid()
+=======
+// //make the tanks do the action structs
+// test.move(gameObject: testTank, action: moveAction)
+// test.printGrid()
+// print("DAD should have moved 2 to the right")
+// test.move(gameObject: testTank3, action: moveAction2)
+// print("Mom should have moved 1 to the left")
+// test.sendMissile(tank: testTank, missileAction: missileAction)
+// print("Hi")
+// let rover = test.dropRover(tank: testTank2, mineAction: roverMineAction)
+
+let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
+test.addGameObject(smplTank)
+>>>>>>> origin/main
 test.doTurn()
 test.printGrid()
 test.doTurn()

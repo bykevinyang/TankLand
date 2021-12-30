@@ -1,6 +1,7 @@
 import Foundation
 
 class SmplTank : Tank {
+<<<<<<< HEAD
   var turn = 0
 
   override func computePreActions() {
@@ -15,6 +16,12 @@ class SmplTank : Tank {
 				addPostAction(postAction: MineAction(power: 100, isRover: true, dropDirection: .North,  moveDirection: nil))
 				turn += 1
 			}
+=======
+  override func computePreActions() {
+    if self.energy > 500 {
+        addPreAction(preAction: RadarAction(radius: 2))
+        addPostAction(postAction: MineAction(power: 100))
+>>>>>>> origin/main
     }
   }
 }
