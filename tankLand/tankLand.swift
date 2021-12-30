@@ -115,6 +115,7 @@ class TankLand {
         self.move(gameObject: r, action: nil)
         self.printGrid()
 <<<<<<< HEAD
+<<<<<<< HEAD
 		}
 
     typealias PreActionFunc = (Tank, PreAction) -> Any
@@ -192,6 +193,24 @@ class TankLand {
         ActionType.DropMine: self.createMine,
     ]
 
+=======
+	}
+
+    typealias PreActionFunc = (Tank, PreAction) -> Any
+
+	let preactionsToFunc: [ActionType: PreActionFunc] = [
+		ActionType.RadarAction: self.runRadar,
+		// ActionType.DropRover: self.createRover,
+		// ActionType.SendMissile: self.sendMissile,
+		// ActionType.Move: self.move,
+		// ActionType.ShieldAction: self.doSetShieldAction
+	]
+
+    let postactionsToFunc: [ActionType: (Tank, PostAction) -> Any] = [
+        ActionType.DropMine: self.createMine,
+    ]
+
+>>>>>>> origin/main
     for tank in objects.0 {
         for tank in objects.0 {
             tank.computePreActions()
@@ -218,5 +237,8 @@ class TankLand {
     }
 
     }
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
 }

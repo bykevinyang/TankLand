@@ -2,10 +2,13 @@
 var test = TankLand(15,15)
 //create tanks
 <<<<<<< HEAD
+<<<<<<< HEAD
 var testTank = Tank(id: "T1", position: Position(6,0), instructions: "rn")
 // var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
 // var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
 =======
+=======
+>>>>>>> origin/main
 var testTank = Tank(id: "T1", position: Position(1,2), instructions: "rn")
 var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
 var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
@@ -43,9 +46,12 @@ test.printGrid()
 
 let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
 test.addGameObject(smplTank)
+<<<<<<< HEAD
 >>>>>>> origin/main
 test.doTurn()
 test.printGrid()
+=======
+>>>>>>> origin/main
 test.doTurn()
 test.printGrid()
 

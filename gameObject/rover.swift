@@ -22,6 +22,7 @@ class Rover: Mine {
 extension TankLand {
 	func dropRover(tank: Tank, mineAction: PostAction) -> Bool {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if tank.energy > Constants.costOfReleasingRover {
 			let dropAction = mineAction as! MineAction
 			
@@ -40,6 +41,8 @@ extension TankLand {
 			return false
 		}
 =======
+=======
+>>>>>>> origin/main
         let dropAction = mineAction as! MineAction
         
         let randomMove: Bool
@@ -52,6 +55,9 @@ extension TankLand {
 		let rover = Rover(sender: tank, mineAction: dropAction, randomMove: randomMove)
 		self.addGameObject(rover)
         return true
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
 	}
 }
