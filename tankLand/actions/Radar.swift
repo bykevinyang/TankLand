@@ -30,7 +30,9 @@ struct RadarAction: PreAction {
 
 
 extension TankLand {
-	func runRadar (tank: Tank, radarAction: RadarAction) -> [RadarResult]? {
+	func runRadar (tank: Tank, radarAction: PreAction) -> [RadarResult]? {
+        let rAct = radarAction as! RadarAction
+
 		let currentRow = tank.position.row
 		let currentCol = tank.position.col
 
@@ -38,15 +40,15 @@ extension TankLand {
 
 		var cost: Int?
 		// Do check on radius
-		if radarAction.radius <= 8 && radarAction.radius >= 0 {
-			cost = Constants.costOfRadarByUnitsDistance[radarAction.radius]
+		if rAct.radius <= 8 && rAct.radius >= 0 {
+			cost = Constants.costOfRadarByUnitsDistance[rAct.radius]
 		} else {
-      print("Radar radius is invalid")
+            print("Radar radius is invalid")
 			return nil
     }
 
-		for rowShift in -radarAction.radius...radarAction.radius {
-			for colShift in -radarAction.radius...radarAction.radius {
+		for rowShift in -rAct.radius...rAct.radius {
+			for colShift in -rAct.radius...rAct.radius {
 				if let object = self[currentRow + rowShift, currentCol + colShift] {
 					// To prevent from counting itself
 					if object.position != tank.position {

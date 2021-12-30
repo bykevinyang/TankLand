@@ -20,9 +20,18 @@ class Rover: Mine {
 }
 
 extension TankLand {
-	func createRover(tank: Tank, mineAction: MineAction, randomMove: Bool = false) -> Rover{
-		let rover = Rover(sender: tank, mineAction: mineAction, randomMove: randomMove)
+	func dropRover(tank: Tank, mineAction: PostAction) -> Bool {
+        let dropAction = mineAction as! MineAction
+        
+        let randomMove: Bool
+        if dropAction.moveDirection == nil {
+            randomMove = true
+        } else {
+            randomMove = false
+        }
+
+		let rover = Rover(sender: tank, mineAction: dropAction, randomMove: randomMove)
 		self.addGameObject(rover)
-        return rover
+        return true
 	}
 }

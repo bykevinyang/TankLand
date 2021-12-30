@@ -67,7 +67,11 @@ struct MineAction: PostAction {
         return "\(action) \(power) \(dropDirectionMessage) \(isRover) \(moveDirectionMessage)"
     }
     init(power: Int, isRover: Bool = false, dropDirection: Direction? = nil,  moveDirection: Direction? = nil){
-        action = .DropMine
+        if isRover == true {
+            self.action = .DropRover
+        } else {
+            self.action = .DropMine
+        }
         self.isRover = isRover
         self.dropDirection = dropDirection
         self.moveDirection = moveDirection
@@ -76,10 +80,13 @@ struct MineAction: PostAction {
 	}
 		
 extension TankLand {
-	func createMine(tank: Tank, mineAction: MineAction) {
-		let mine = Mine(sender: tank, mineAction: mineAction)
+	func createMine(tank: Tank, mineAction: PostAction) -> Bool {
+        let mineAct = mineAction as! MineAction
+        
+		let mine = Mine(sender: tank, mineAction: mineAct)
 		self.addGameObject(mine)
-    tank.chargeEnergy(Constants.costOfReleasingMine)
-    print("\(tank) dropped a mine abd was charged \(Constants.costOfReleasingMine) energy")
+        tank.chargeEnergy(Constants.costOfReleasingMine)
+        print("\(tank) dropped a mine abd was charged \(Constants.costOfReleasingMine) energy")
+        return true
 	}
 }

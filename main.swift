@@ -30,7 +30,7 @@
 //create board
 var test = TankLand(10,10)
 //create tanks
-var testTank = Tank(id: "T1", position: Position(1,2), instructions: "Hi")
+var testTank = Tank(id: "T1", position: Position(1,2), instructions: "rn")
 var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
 var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
 //add tanks to boardtest.addGameObject(testTank)
@@ -56,10 +56,11 @@ var roverMineAction = MineAction(power: 100, isRover: true, dropDirection: .Nort
 // print("Mom should have moved 1 to the left")
 // test.sendMissile(tank: testTank, missileAction: missileAction)
 // print("Hi")
-let rover = test.createRover(tank: testTank2, mineAction: roverMineAction, randomMove: true)
-test.printGrid()
-print("Rover should have moved 1 to the north")
-test.move(gameObject: rover, action: nil)
+// let rover = test.dropRover(tank: testTank2, mineAction: roverMineAction)
+
+let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
+test.addGameObject(smplTank)
+test.doTurn()
 test.printGrid()
 // print("Rover should have been created")
 // test.printGrid()
