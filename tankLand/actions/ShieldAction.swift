@@ -23,7 +23,7 @@ extension TankLand {
         tank.setShield(cost * Constants.shieldPowerMultiple)
 		
 	        //PRINT STATEMENT FOR DEBUGGING PURPOSES WHILE LOGGER IS DEVELOPED
-      print("SHIELD ADDED...\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
+      print("\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
           //UPDATE LOGGER HERE
   }
 }

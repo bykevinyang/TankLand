@@ -1,5 +1,6 @@
 # To-Do List
 Still Needs to be Done:
+- Test if move works on rovers
 - Logger
 - TankLand (Create turns functionality)
 - Mine
