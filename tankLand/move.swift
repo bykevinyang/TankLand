@@ -31,113 +31,178 @@ func outOfBounds(row: Int, col: Int) -> Bool {
     return true
   }
 }
-
 extension TankLand {
-    // Move function for all gameobjects.
-    // Takes in an action, will return a bool on the success of that move
-  func move(gameObject: GameObject, action : PostAction? = nil) -> Bool {
-
-    var ogGameObject: GameObject = gameObject
+  func move(gameObject: GameObject, action: PostAction? = nil) {
     if gameObject.type == .Tank && action != nil {
-			let postAction = action
-      let moveAction: MoveAction = postAction as! MoveAction
-
+      let postAction = action
+      let moveAction = postAction as! MoveAction
       ogROW = gameObject.position.row // Orginal row
       ogCOL = gameObject.position.col // Orginal col
-  
-      nextROW += (DirectionToVectorMove[moveAction.direction]!.0 * moveAction.distance + ogROW)
-      nextCOL += (DirectionToVectorMove[moveAction.direction]!.1 * moveAction.distance + ogCOL)
-
-      //checks if new coor is out of bounds
+      nextROW += (DirectionToVectorMove[moveAction.direction]!.0 * moveAction.distance + ogROW) //posiiton that tank is going to move to
+      nextCOL += (DirectionToVectorMove[moveAction.direction]!.1 * moveAction.distance + ogCOL) //posiiton that tank is going to move to
+      //check if tank has enough energy to move
+      if gameObject.energy <= (Constants.costOfMovingTankPerUnitDistance[actions.distance]) {
+        print("\(gameObject.id) does not have enough energy to move")
+      } else {
+        //check if tank is going to move out of bounds
         if outOfBounds(row: nextROW, col: nextCOL) == true {
-          print("\(gameObject.id): Cannot move because it's out of bounds")
+          print("\(gameObject.id) cannot move because it will be out of bounds")
         } else {
-          //checks if there's already a GO in the new coor
+          //now the move
+          //check if there is something in spot already, different things will happen for tank, rover/mine, or nothing in the new spot
           if let occupyingGO = self[nextROW, nextCOL] {
             //if it's a tank, tank will not move
             if occupyingGO.type == .Tank {
-              print("Cannot move becase there is a tank in the spot")
-            //if it's a mine, tank will move and take dmg  
-            } else if occupyingGO.type == .Mine {
-              self[nextROW, nextCOL] = gameObject
+              print("\(gameObject) cannot move because there is a tank in the new spot")
+            } else if occupyingGO.type == .Mine || occupyingGO.type == .Rover {
+              //charge cost of moving
+              gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[actions.distance])
+              self[nextROW, nextCOL] = nil
               self[ogROW, ogCOL] = nil
-              gameObject.setPosition(Position(nextROW, nextCOL))
-              let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[moveAction.distance]
-              gameObject.chargeEnergy(damageTaken)
-              print("\(gameObject.id) moved to \(nextROW),\(nextCOL) and took \(damageTaken) damage")
-              
+              //check if tank is still alive after mine/rover blows up
+              let damage = occupyingGO.energy * Constants.mineStrikeMultiple
+              gameObject.chargeEnergy(damage)
               if checkLife(gameObject: gameObject) == false {
-                self[gameObject.position.row, gameObject.position.col] = nil
+                print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)")
+              } else {
+                print("\(gameObject.id) tanked the damage from mine/rover \(occupyingGO.id)")
+                self[nextROW, nextCOL] = gameObject
               }
             } else {
-              ()
-            }
-          } else { 
-            self[ogROW, ogCOL] = nil
-            self[nextROW, nextCOL] = gameObject
-            gameObject.setPosition(Position(nextROW, nextCOL))
-            print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
-            if checkLife(gameObject: gameObject) == false {
-              self[gameObject.position.row, gameObject.position.col] = nil
+              //just move to spot if there is nothing there
+              gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[actions.distance])
+              self[nextROW, nextCOL] = gameObject
+              print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
             }
           }
         }
-      ogCOL = 0
-      ogROW = 0
-      nextCOL = 0
-      nextROW = 0
-    } else if gameObject.type == .Rover {
-        ogROW = gameObject.position.row // Orginal row
-        ogCOL = gameObject.position.col // Orginal col
+      }
+    } else if gameObject.type == .Rover && action != nil {
+      let postAction = action
+      let moveAction = postAction as! MoveAction
+      //check if rover has enough energy to move
+      if gameObject.energy <= Constants.costOfMovingRover {
+        print("\(gameObject.id) does not have enough energy to move")
+      } else {
+        //check if the rover is a random move direction or a set move direction
+        if gameObject.randomMove = false{
 
-        let rover = gameObject as! Rover
-
-        nextROW += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.0 + ogROW)
-        nextCOL += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.1 + ogCOL)
-
-        //checks if new coor is out of bounds
-        if outOfBounds(row: nextROW, col: nextCOL) == true {
-            print("Cannot move because it's out of bounds")
-        } else {
-            //checks if there's already a GO in the new coor
-            if let occupyingGO = self[nextROW, nextCOL] {
-                //if it's a tank
-                if occupyingGO.type == .Tank {
-                    occupyingGO.chargeEnergy(gameObject.energy * Constants.mineStrikeMultiple)
-                    self[ogROW, ogCOL] = nil
-                    print("\(gameObject.id) hit a tank and died")
-                    if !checkLife(gameObject: occupyingGO) {
-											self[nextROW, nextCOL] = nil
-										}
-                    if self[nextROW, nextCOL] == nil {
-                      print("\(occupyingGO.id) died")
-                    }
-                //if it's a mine/rover
-                    } else if occupyingGO.type == .Mine || occupyingGO.type == .Rover { // Ask Mr.P if we rovers can explode other rovers
-                    occupyingGO.chargeEnergy(gameObject.energy * Constants.mineStrikeMultiple)
-                    self[ogROW, ogCOL] = nil
-                    print("\(gameObject.id) hit a mine/rover and died")
-                    checkLife(gameObject: occupyingGO)
-                    if self[nextROW, nextCOL] == nil {
-                      print("\(occupyingGO.id) died")
-                    }
-                }
-            } else { 
-                self[ogROW, ogCOL] = nil
-                self[nextROW, nextCOL] = gameObject
-                gameObject.setPosition(Position(nextROW, nextCOL))
-                print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
-                checkLife(gameObject: gameObject)
-            }
         }
-        ogCOL = 0
-        ogROW = 0
-        nextCOL = 0
-        nextROW = 0
-        }
-    return false
+      }
+    }
   }
 }
+
+
+
+
+
+// extension TankLand {
+//     // Move function for all gameobjects.
+//     // Takes in an action, will return a bool on the success of that move
+//   func move(gameObject: GameObject, action : PostAction? = nil) -> Bool {
+
+//     var ogGameObject: GameObject = gameObject
+//     if gameObject.type == .Tank && action != nil {
+// 			let postAction = action
+//       let moveAction: MoveAction = postAction as! MoveAction
+
+//       ogROW = gameObject.position.row // Orginal row
+//       ogCOL = gameObject.position.col // Orginal col
+  
+//       nextROW += (DirectionToVectorMove[moveAction.direction]!.0 * moveAction.distance + ogROW)
+//       nextCOL += (DirectionToVectorMove[moveAction.direction]!.1 * moveAction.distance + ogCOL)
+
+//       //checks if new coor is out of bounds
+//         if outOfBounds(row: nextROW, col: nextCOL) == true {
+//           print("\(gameObject.id): Cannot move because it's out of bounds")
+//         } else {
+//           //checks if there's already a GO in the new coor
+//           if let occupyingGO = self[nextROW, nextCOL] {
+//             //if it's a tank, tank will not move
+//             if occupyingGO.type == .Tank {
+//               print("Cannot move becase there is a tank in the spot")
+//             //if it's a mine, tank will move and take dmg  
+//             } else if occupyingGO.type == .Mine {
+//               self[nextROW, nextCOL] = gameObject
+//               self[ogROW, ogCOL] = nil
+//               gameObject.setPosition(Position(nextROW, nextCOL))
+//               let damageTaken = occupyingGO.energy * Constants.mineStrikeMultiple + Constants.costOfMovingTankPerUnitDistance[moveAction.distance]
+//               gameObject.chargeEnergy(damageTaken)
+//               print("\(gameObject.id) moved to \(nextROW),\(nextCOL) and took \(damageTaken) damage")
+              
+//               if checkLife(gameObject: gameObject) == false {
+//                 self[gameObject.position.row, gameObject.position.col] = nil
+//               }
+//             } else {
+//               ()
+//             }
+//           } else { 
+//             self[ogROW, ogCOL] = nil
+//             self[nextROW, nextCOL] = gameObject
+//             gameObject.setPosition(Position(nextROW, nextCOL))
+//             print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+//             if checkLife(gameObject: gameObject) == false {
+//               self[gameObject.position.row, gameObject.position.col] = nil
+//             }
+//           }
+//         }
+//       ogCOL = 0
+//       ogROW = 0
+//       nextCOL = 0
+//       nextROW = 0
+//     } else if gameObject.type == .Rover {
+//         ogROW = gameObject.position.row // Orginal row
+//         ogCOL = gameObject.position.col // Orginal col
+
+//         let rover = gameObject as! Rover
+
+//         nextROW += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.0 + ogROW)
+//         nextCOL += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.1 + ogCOL)
+
+//         //checks if new coor is out of bounds
+//         if outOfBounds(row: nextROW, col: nextCOL) == true {
+//             print("Cannot move because it's out of bounds")
+//         } else {
+//             //checks if there's already a GO in the new coor
+//             if let occupyingGO = self[nextROW, nextCOL] {
+//                 //if it's a tank
+//                 if occupyingGO.type == .Tank {
+//                     occupyingGO.chargeEnergy(gameObject.energy * Constants.mineStrikeMultiple)
+//                     self[ogROW, ogCOL] = nil
+//                     print("\(gameObject.id) hit a tank and died")
+//                     if !checkLife(gameObject: occupyingGO) {
+// 											self[nextROW, nextCOL] = nil
+// 										}
+//                     if self[nextROW, nextCOL] == nil {
+//                       print("\(occupyingGO.id) died")
+//                     }
+//                 //if it's a mine/rover
+//                     } else if occupyingGO.type == .Mine || occupyingGO.type == .Rover { // Ask Mr.P if we rovers can explode other rovers
+//                     occupyingGO.chargeEnergy(gameObject.energy * Constants.mineStrikeMultiple)
+//                     self[ogROW, ogCOL] = nil
+//                     print("\(gameObject.id) hit a mine/rover and died")
+//                     checkLife(gameObject: occupyingGO)
+//                     if self[nextROW, nextCOL] == nil {
+//                       print("\(occupyingGO.id) died")
+//                     }
+//                 }
+//             } else { 
+//                 self[ogROW, ogCOL] = nil
+//                 self[nextROW, nextCOL] = gameObject
+//                 gameObject.setPosition(Position(nextROW, nextCOL))
+//                 print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+//                 checkLife(gameObject: gameObject)
+//             }
+//         }
+//         ogCOL = 0
+//         ogROW = 0
+//         nextCOL = 0
+//         nextROW = 0
+//         }
+//     return false
+//   }
+// }
 
 
 //kevin's funky move func
