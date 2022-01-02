@@ -143,8 +143,8 @@ class TankLand {
 
     let postactionsToFunc: [ActionType: (Tank, PostAction) -> Any] = [
         ActionType.DropMine: self.dropMine,
-                ActionType.Move: self.move,
-                ActionType.DropRover: self.dropRover
+        ActionType.Move: self.move,
+        ActionType.DropRover: self.dropRover
     ]
 
         // Compute PreActions
@@ -174,7 +174,9 @@ class TankLand {
     for tank in tanks {
         for (actionType, postAction) in tank.postActions {
             if let actionFunc = postactionsToFunc[actionType] {
+                print("\(tank.id) \(actionType) \(postAction)")
                 let result = actionFunc(tank, postAction)
+                
             }
         }
     }

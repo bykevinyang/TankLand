@@ -31,10 +31,13 @@ var testTank = Tank(id: "T1", position: Position(6,0), instructions: "rn")
 
 let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
 test.addGameObject(smplTank)
+test.dropRover(tank: smplTank, mineAction: MineAction(power: 100, isRover: true, dropDirection: .North, moveDirection: .East))
+test.printGrid()
+test.move(gameObject: smplTank, action: MoveAction(distance: 2, direction: .South))
 test.doTurn()
 test.printGrid()
 
-for i in 0..<3 {
-	test.doTurn()
-	test.printGrid()
-}
+// for i in 0..<3 {
+// 	test.doTurn()
+// 	test.printGrid()
+// }
