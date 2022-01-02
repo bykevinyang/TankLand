@@ -103,94 +103,104 @@ class TankLand {
 		return (tanks, mines, rovers)
     }
 
-  func doTurn() {
-    let objects = getAllObjects()		// Returns tuple of ([Tanks], [Mine], [Rover])
+    func doTurn() {
+        let objects = getAllObjects()		// Returns tuple of ([Tanks], [Mine], [Rover])
 
-    var tanks = objects.0
-    var mines = objects.1
-    var rovers = objects.2
+        var tanks = objects.0
+        var mines = objects.1
+        var rovers = objects.2
 
-    // Charge life support
-    for tank in tanks { tank.chargeEnergy(Constants.costLifeSupportTank) }
-    for mine in mines { mine.chargeEnergy(Constants.costLifeSupportMine) }
-    for rover in rovers { rover.chargeEnergy(Constants.costLifeSupportRover) }
+        // Charge life support
+        for tank in tanks { tank.chargeEnergy(Constants.costLifeSupportTank) }
+        for mine in mines { mine.chargeEnergy(Constants.costLifeSupportMine) }
+        for rover in rovers { rover.chargeEnergy(Constants.costLifeSupportRover) }
 
-    var allObjects: [[GameObject]] = [tanks, mines, rovers]
+        var allObjects: [[GameObject]] = [tanks, mines, rovers]
 
-    // Remove dead objects
-    for (i, objects) in allObjects.enumerated() {
-        for (j, object) in objects.enumerated() {
-            if !checkLife(gameObject: object) {
-                removeGameObject(object)
-                allObjects[i].remove(at: j)
+        // Remove dead objects
+        for (i, objects) in allObjects.enumerated() {
+            for (j, object) in objects.enumerated() {
+                if !checkLife(gameObject: object) {
+                    removeGameObject(object)
+                    allObjects[i].remove(at: j)
+                }
             }
         }
-    }
 
-    for r in rovers {
-        print(r)
-        self.move(gameObject: r, action: nil)
-        self.printGrid()
-    }
-
-    typealias PreActionFunc = (Tank, PreAction) -> Any
-
-    let preactionsToFunc: [ActionType: PreActionFunc] = [
-        ActionType.RadarAction: self.runRadar,
-        // ActionType.SendMissile: self.sendMissile,
-        // ActionType.ShieldAction: self.doSetShieldAction
-    ]
-
-    let postactionsToFunc: [ActionType: (Tank, PostAction) -> Any] = [
-        ActionType.DropMine: self.dropMine,
-        ActionType.Move: self.move,
-        ActionType.DropRover: self.dropRover
-    ]
-
-        // Compute PreActions
-    for tank in tanks {
-        for tank in objects.0 {
-            tank.computePreActions()
+        for r in rovers {
+            print(r)
+            self.move(gameObject: r, action: nil)
+            self.printGrid()
         }
-    }
 
-    // Do PreActions
-    for tank in tanks {
-        for (actionType, preAction) in tank.preActions {
-            if let actionFunc = preactionsToFunc[actionType] {
-                let result = actionFunc(tank, preAction)
+        typealias PreActionFunc = (Tank, PreAction) -> Any
+        typealias PostActionFunc = (Tank, PostAction) -> Any
+
+        let preactionsToFunc: [ActionType: PreActionFunc] = [
+            ActionType.RadarAction: self.runRadar,
+            ActionType.ShieldAction: self.doSetShieldAction
+        ]
+
+        let postactionsToFunc: [ActionType: PostActionFunc] = [
+            ActionType.DropMine: self.dropMine,
+            ActionType.DropRover: self.dropRover,
+            ActionType.SendMissile: self.sendMissile,
+            ActionType.Move: self.move
+        ]
+
+        // To set the order in which to conduct the post actions
+        let orderOfPostActions: [ActionType] = [
+            ActionType.DropMine,        // 1    
+            ActionType.DropRover,       // 2
+            ActionType.SendMissile,     // 3
+            ActionType.Move,             // 4
+        ]
+
+            // Compute PreActions
+        for tank in tanks {
+            for tank in objects.0 {
+                tank.computePreActions()
             }
         }
-    }
+
+        // Do PreActions
+        for tank in tanks {
+            for (actionType, preAction) in tank.preActions {
+                if let actionFunc = preactionsToFunc[actionType] {
+                    let result = actionFunc(tank, preAction)
+                }
+            }
+        }
 
         // Compute PostActions
-    for tank in tanks {
-        for tank in objects.0 {
-            tank.computePostActions()
-        }
-    }
-
-    // Do PostActions
-    for tank in tanks {
-        for (actionType, postAction) in tank.postActions {
-            if let actionFunc = postactionsToFunc[actionType] {
-                print("\(tank.id) \(actionType) \(postAction)")
-                let result = actionFunc(tank, postAction)
-                
+        for tank in tanks {
+            for tank in objects.0 {
+                tank.computePostActions()
             }
         }
-    }
 
-        // Clear Post and Preactions 
-    for tank in objects.0 {
-        print("Before Clear")	
-        print(tank.preActions)
-        print(tank.postActions)
-        print("After Clear")
-        tank.preActions.removeAll()
-        tank.postActions.removeAll()
-        print(tank.preActions)
-        print(tank.postActions)
+        // Do PostActions
+        for tank in tanks {
+            for currentActionToExecute in orderOfPostActions { // To maintain the order in which to execute the post actions
+                if let tankAction = tank.postActions[currentActionToExecute] {
+                    if let postAction = postactionsToFunc[currentActionToExecute] {
+                        let result = postAction(tank, tankAction) // Actual execution of the post action
+                        print(result)
+                    }
+                }
+            }
+        }
+
+            // Clear Post and Preactions 
+        for tank in objects.0 {
+            print("Before Clear")	
+            print(tank.preActions)
+            print(tank.postActions)
+            print("After Clear")
+            tank.preActions.removeAll()
+            tank.postActions.removeAll()
+            print(tank.preActions)
+            print(tank.postActions)
+        }
     }
-    }
-    }
+}
