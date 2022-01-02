@@ -35,13 +35,13 @@ extension TankLand {
   func move(gameObject: GameObject, action: PostAction? = nil) {
     if gameObject.type == .Tank && action != nil {
       let postAction = action
-      let moveAction = postAction as! MoveAction
+      let moveAction: MoveAction = postAction as! MoveAction
       ogROW = gameObject.position.row // Orginal row
       ogCOL = gameObject.position.col // Orginal col
       nextROW += (DirectionToVectorMove[moveAction.direction]!.0 * moveAction.distance + ogROW) //posiiton that tank is going to move to
       nextCOL += (DirectionToVectorMove[moveAction.direction]!.1 * moveAction.distance + ogCOL) //posiiton that tank is going to move to
       //check if tank has enough energy to move
-      if gameObject.energy <= (Constants.costOfMovingTankPerUnitDistance[actions.distance]) {
+      if gameObject.energy <= (Constants.costOfMovingTankPerUnitDistance[moveAction.distance]) {
         print("\(gameObject.id) does not have enough energy to move")
       } else {
         //check if tank is going to move out of bounds
@@ -56,7 +56,7 @@ extension TankLand {
               print("\(gameObject) cannot move because there is a tank in the new spot")
             } else if occupyingGO.type == .Mine || occupyingGO.type == .Rover {
               //charge cost of moving
-              gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[actions.distance])
+              gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[moveAction.distance])
               self[nextROW, nextCOL] = nil
               self[ogROW, ogCOL] = nil
               //check if tank is still alive after mine/rover blows up
@@ -70,7 +70,7 @@ extension TankLand {
               }
             } else {
               //just move to spot if there is nothing there
-              gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[actions.distance])
+              gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[moveAction.distance])
               self[nextROW, nextCOL] = gameObject
               print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
             }
@@ -79,18 +79,49 @@ extension TankLand {
       }
     } else if gameObject.type == .Rover && action != nil {
       let postAction = action
+      print("HERE")
+      print(type(of: postAction))
       let moveAction = postAction as! MoveAction
+      
+      let rover = gameObject as! Rover
       //check if rover has enough energy to move
       if gameObject.energy <= Constants.costOfMovingRover {
-        print("\(gameObject.id) does not have enough energy to move")
+            print("\(gameObject.id) does not have enough energy to move")
       } else {
-        //check if the rover is a random move direction or a set move direction
-        if gameObject.randomMove = false{
-
+            ogROW = gameObject.position.row // Orginal row
+            ogCOL = gameObject.position.col // Orginal col
+            nextROW += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.0 + ogROW) //posiiton that tank is going to move to
+            nextCOL += (DirectionToVectorMove[rover.mineAction.moveDirection ?? .North]!.1 + ogCOL) //
+            //check if rover is going to move out of bounds
+            if gameObject.energy <= (Constants.costOfMovingTankPerUnitDistance[moveAction.distance]) {
+                print("\(gameObject.id) does not have enough energy to move")
+            } else {
+                //check if tank is going to move out of bounds
+                if outOfBounds(row: nextROW, col: nextCOL) == true {
+                    print("\(gameObject.id) cannot move because it will be out of bounds")
+                } else {
+                    //now the move
+                    //check if there is something in spot already, different things will happen for tank, rover/mine, or nothing in the new spot
+                    if let occupyingGO = self[nextROW, nextCOL] {
+                        //if it's a tank, tank will not move
+                        if occupyingGO.type == .Tank {
+                            occupyingGO.chargeEnergy(Constants.mineStrikeMultiple * rover.energy)
+                            print("\(gameObject) hit a tank, exploded with \(Constants.mineStrikeMultiple * rover.energy) damage")
+                        } else if occupyingGO.type == .Mine || occupyingGO.type == .Rover {
+                            print("SHOULD ROVER EXPLODE WHEN IT HITS A MINE?")
+                        // does rover explode when it hits a mine or another rover?
+                        }
+                    } else {
+                        //just move to spot if there is nothing there
+                        gameObject.chargeEnergy(Constants.costOfMovingRover)
+                        self[nextROW, nextCOL] = gameObject
+                        print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+                        }   
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
 
 
