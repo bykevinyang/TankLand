@@ -21,9 +21,6 @@ class Rover: Mine {
 
 extension TankLand {
 	func dropRover(tank: Tank, mineAction: PostAction) -> Bool {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 		if tank.energy > Constants.costOfReleasingRover {
 			let dropAction = mineAction as! MineAction
 			
@@ -41,29 +38,5 @@ extension TankLand {
 			print("\(tank) does not have enough energy to create a rover")
 			return false
 		}
-=======
-=======
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-        let dropAction = mineAction as! MineAction
-        
-        let randomMove: Bool
-        if dropAction.moveDirection == nil {
-            randomMove = true
-        } else {
-            randomMove = false
-        }
-
-		let rover = Rover(sender: tank, mineAction: dropAction, randomMove: randomMove)
-		self.addGameObject(rover)
-        return true
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-=======
->>>>>>> origin/main
 	}
 }

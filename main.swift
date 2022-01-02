@@ -1,21 +1,9 @@
 //create board
 var test = TankLand(15,15)
 //create tanks
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 var testTank = Tank(id: "T1", position: Position(6,0), instructions: "rn")
 // var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
 // var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
-=======
-=======
->>>>>>> origin/main
-=======
->>>>>>> origin/main
-var testTank = Tank(id: "T1", position: Position(1,2), instructions: "rn")
-var testTank2 = Tank(id: "T2", position: Position(4,5), instructions: "Hi")
-var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
->>>>>>> origin/main
 //add tanks to boardtest.addGameObject(testTank)
 //test.addGameObject(testTank)
 //test.addGameObject(testTank2)
@@ -31,12 +19,6 @@ var testTank3 = Tank(id: "T3", position: Position(7,8), instructions: "Hi")
 
 // var roverMineAction = MineAction(power: 100, isRover: true, dropDirection: .NorthEast)
 
-<<<<<<< HEAD
-let smplTank = SmplTank(id: "TSIMP", position: Position(6,2), instructions: "Hi")
-test.addGameObject(testTank)
-test.addGameObject(smplTank)
-test.printGrid()
-=======
 // //make the tanks do the action structs
 // test.move(gameObject: testTank, action: moveAction)
 // test.printGrid()
@@ -49,19 +31,13 @@ test.printGrid()
 
 let smplTank = SmplTank(id: "TSIMP", position: Position(1,1), instructions: "Hi")
 test.addGameObject(smplTank)
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> origin/main
-test.doTurn()
+test.dropRover(tank: smplTank, mineAction: MineAction(power: 100, isRover: true, dropDirection: .North, moveDirection: .East))
 test.printGrid()
-=======
->>>>>>> origin/main
-=======
->>>>>>> origin/main
+test.move(gameObject: smplTank, action: MoveAction(distance: 2, direction: .South))
 test.doTurn()
 test.printGrid()
 
-for i in 0..<3 {
-	test.doTurn()
-	test.printGrid()
-}
+// for i in 0..<3 {
+// 	test.doTurn()
+// 	test.printGrid()
+// }
