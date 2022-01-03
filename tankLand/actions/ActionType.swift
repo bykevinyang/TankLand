@@ -1,13 +1,12 @@
 enum ActionType {
-  case RadarAction
-  case DropRover
-  case DropMine
-  case SendMissile
-  case SendMessage
-  case ReceiveMessage
-  case MissileAction
-  case Move
-  case ShieldAction
+    case RadarAction
+    case DropRover
+    case DropMine
+    case SendMessage
+    case ReceiveMessage
+    case MissileAction
+    case Move
+    case ShieldAction
 }
 
 

@@ -5,9 +5,10 @@ class SmplTank : Tank {
 
   override func computePreActions() {
     if self.energy > 500 {
-        addPostAction(postAction: MoveAction(distance: 1, direction: .North))
+        // addPostAction(postAction: MoveAction(distance: 1, direction: .North))
         addPreAction(preAction: ShieldAction(energy: 500))
         addPreAction(preAction: RadarAction(radius: 3))
+        addPostAction(postAction: MissileAction(energy: 10000, position: Position(5,4)))
         // if turn == 0 {
         //     addPreAction(preAction: RadarAction(radius: 2))
         //     addPostAction(postAction: MoveAction(distance: 1, direction: .North))
