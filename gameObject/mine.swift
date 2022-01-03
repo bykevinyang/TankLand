@@ -1,5 +1,7 @@
 class Mine: GameObject {
 	static var mineCount: Int = 0
+	static var roverCount: Int = 0
+
 	var mineAction: MineAction
 
 	var damage: Int {
@@ -14,8 +16,16 @@ class Mine: GameObject {
 		} else {
 			type = GameObjectType.Mine
 		}
-		let id = "\(sender.id)M\(Mine.mineCount)"
-		Mine.mineCount += 1
+
+		let id: String
+		if mineAction.isRover {
+			id = "\(sender.id)R\(Mine.roverCount)"
+			Mine.roverCount += 1
+		} else {
+			id = "\(sender.id)M\(Mine.mineCount)"
+			Mine.mineCount += 1
+		}
+
 		let initialPosition = Mine.calcInitPosition(sender: sender, dropDirection: mineAction.dropDirection)
 		super.init(type: type, id: id, position: initialPosition, energy: mineAction.power)
 	}
@@ -80,13 +90,19 @@ struct MineAction: PostAction {
 	}
 		
 extension TankLand {
-	func createMine(tank: Tank, mineAction: PostAction) -> Bool {
-        let mineAct = mineAction as! MineAction
+	func dropMine(tank: Tank, mineAction: PostAction) -> Bool {
+	if tank.energy > Constants.costOfReleasingMine {
+		let mineAct = mineAction as! MineAction
         
 		let mine = Mine(sender: tank, mineAction: mineAct)
 		self.addGameObject(mine)
         tank.chargeEnergy(Constants.costOfReleasingMine)
-        print("\(tank) dropped a mine abd was charged \(Constants.costOfReleasingMine) energy")
-        return true
+
+        print("\(tank.id) dropped mine \(mine.id) and was charged \(Constants.costOfReleasingMine) energy")
+		return true
+		} else {
+			print("\(tank.id) unable to drop mine b/c it does not have enough energy")	
+			return false
+		}
 	}
 }
