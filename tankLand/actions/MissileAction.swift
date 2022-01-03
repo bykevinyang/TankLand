@@ -28,7 +28,9 @@ extension TankLand {
         //calculating cost
         let cost = Constants.costOfLaunchingMissile + distance * 200
         guard tank.energy > cost else {
-            print("SHIELD FAILED...\(tank.id) DOES NOT HAVE ENOUGH ENERGY")
+            // print("SHIELD FAILED...\(tank.id) DOES NOT HAVE ENOUGH ENERGY")
+            addLog(cmd: "\(tank.id) cannot send missile because it does not have enough energy")
+            
             return false
         }
         tank.chargeEnergy(cost) 
@@ -36,7 +38,8 @@ extension TankLand {
             // ADD IN DAMAGING PART FOR SENDMISSILE
         let currentRow = missileAction.position.row
             let currentCol = missileAction.position.col
-        print("\(tank) sent a missile to \(missileAction.position) and used \(cost) energy")
+        //print("\(tank) sent a missile to \(missileAction.position) and used \(cost) energy")
+        addLog(cmd: "\(tank.id) sent a missile to \(missileAction.position) and used \(cost) energy")
         for rowShift in -1...1 {
             for colShift in -1...1 {
                 if let object = self[currentRow + rowShift, currentCol + colShift] {
@@ -48,7 +51,8 @@ extension TankLand {
                         if object.energy <= 0 {
                         self[missileAction.position.row, missileAction.position.col] = nil
                         tank.gainEnergy(ogEnergy / 4)
-                                        print("\(object) was hit with direct \(damage) and died")	
+                          //print("\(object) was hit with direct \(damage) and died")	
+                          addLog(cmd: "\(object.id) was hit with direct \(damage) and died")
                         }
                     } else {
                         let damage = cost*Constants.missileStrikeMultipleCollateral
@@ -57,7 +61,8 @@ extension TankLand {
                         if object.energy <= 0 {
                         self[currentRow + rowShift, currentCol + colShift] = nil
                         tank.gainEnergy(ogEnergy / 4)
-                                        print("\(object) was hit with collatral \(damage) and died")	
+                          //print("\(object) was hit with collatral \(damage) and died")	
+                          addLog(cmd: "\(object.id) was hit with collatral \(damage) and died")
                         }
                     }
                 }
