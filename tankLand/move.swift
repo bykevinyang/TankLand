@@ -110,7 +110,7 @@ extension TankLand {
             if let occupyingGO = self[nextROW, nextCOL] {
                 print("THERE IS AN OBJECT IN THE SPOT")
                 gameObject.chargeEnergy(Constants.costOfMovingRover)
-                //if it's a tank, tank will not move
+                //if it's a tank, rover moves into tank and explodes
                 if occupyingGO.type == .Tank 
                 {
                     // Blow up tank
@@ -122,6 +122,15 @@ extension TankLand {
                     return true
                 }
                 if occupyingGO.type == .Mine || occupyingGO.type == .Rover {
+                    gameObject.chargeEnergy(Constants.costOfMovingRover)
+                    let damage = rover.energy * Constants.mineStrikeMultiple
+                    occupyingGO.chargeEnergy(damage)
+                    print("\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
+                    self[ogROW,ogCOL] = nil
+                    if occupyingGO.energy <= 0 {
+                      print("\(occupyingGO.id) had 0 energy and died")
+                      self[nextROW, nextCOL] = nil
+                    }
                     //charge cost of moving
                     // Check what should happen if two mines and rovers meet 
                     return true
