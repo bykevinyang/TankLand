@@ -55,9 +55,9 @@ class TankLand {
 			for gameObject in objects {
 				let randomRow = Int.random(in: 0..<self.numberRows)
 				let randomCol = Int.random(in: 0..<self.numberCols)
-
-				// CONTINUE WORKING ON THIS LATER
-			}
+                gameObject.setPosition(Position(randomRow, randomCol))
+                self.addGameObject(gameObject)
+            }
         //Sample
         //addGameObject( gameObject: MyTank(row: 2, col: 2, energy: 20000, id: "T1", instructions: ""))
     }
@@ -80,7 +80,8 @@ class TankLand {
 // }
 //         print("****Winner is...\(lastLivingTank!)")
 //     }
-	func getAllObjects() -> ([Tank], [Mine], [Rover]) {
+	
+    func getAllObjects() -> ([Tank], [Mine], [Rover]) {
 		var tanks : [Tank] = []
 		var mines : [Mine] = []
 		var rovers : [Rover] = []
@@ -105,10 +106,12 @@ class TankLand {
 
     func doTurn() {
         let objects = getAllObjects()		// Returns tuple of ([Tanks], [Mine], [Rover])
-
+        
         var tanks = objects.0
         var mines = objects.1
         var rovers = objects.2
+
+        var alivePlayers = tanks.count
 
         // Charge life support
         for tank in tanks { tank.chargeEnergy(Constants.costLifeSupportTank) }
@@ -128,9 +131,19 @@ class TankLand {
         }
 
         for r in rovers {
-            print(r)
-            self.move(gameObject: r, action: nil)
-            self.printGrid()
+            let result = self.move(gameObject: r, action: nil)
+            if type(of: result) == (Bool, Bool).self {
+                let boolResult = result as! (Bool, Bool)
+                if boolResult.1 == true {
+                    alivePlayers -= 1
+                    if alivePlayers == 1 {
+                        let remaingingTanks = getAllObjects().0
+                        setWinner(lastTankStanding: remaingingTanks[0])
+                        print("Winner has been found!: \(remaingingTanks[0])")
+                        // Note: This only works assuming that there were more than two tanks started on the board 
+                    }
+                }
+            }
         }
 
         typealias PreActionFunc = (Tank, PreAction) -> Any
@@ -144,15 +157,15 @@ class TankLand {
         let postactionsToFunc: [ActionType: PostActionFunc] = [
             ActionType.DropMine: self.dropMine,
             ActionType.DropRover: self.dropRover,
-            ActionType.SendMissile: self.sendMissile,
-            ActionType.Move: self.move
+            ActionType.Move: self.move,
+            ActionType.MissileAction: self.sendMissile,
         ]
 
         // To set the order in which to conduct the post actions
         let orderOfPostActions: [ActionType] = [
             ActionType.DropMine,        // 1    
             ActionType.DropRover,       // 2
-            ActionType.SendMissile,     // 3
+            ActionType.MissileAction,     // 3
             ActionType.Move,             // 4
         ]
 
@@ -186,6 +199,17 @@ class TankLand {
                     if let postAction = postactionsToFunc[currentActionToExecute] {
                         let result = postAction(tank, tankAction) // Actual execution of the post action
                         print(result)
+                        if type(of: result) == (Bool, Bool).self {
+                            let boolResult = result as! (Bool, Bool)
+                            if boolResult.1 == true {
+                                alivePlayers -= 1
+                                if alivePlayers == 1 {
+                                     let remaingingTanks = getAllObjects().0
+                                    setWinner(lastTankStanding: remaingingTanks[0])
+                                    print("Winner has been found!: \(remaingingTanks[0])")
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -193,14 +217,14 @@ class TankLand {
 
             // Clear Post and Preactions 
         for tank in objects.0 {
-            print("Before Clear")	
-            print(tank.preActions)
-            print(tank.postActions)
-            print("After Clear")
+            // print("Before Clear")	
+            // print(tank.preActions)
+            // print(tank.postActions)
+            // print("After Clear")
             tank.preActions.removeAll()
             tank.postActions.removeAll()
-            print(tank.preActions)
-            print(tank.postActions)
+            // print(tank.preActions)
+            // print(tank.postActions)
         }
     }
 }
