@@ -6,6 +6,7 @@
 //TankLandActions contains the code that implements the actions; the most complex code in TankLand
 
 class TankLand {
+    //var log: [String] = []
     var ogROW: Int = 0
     var ogCOL: Int = 0
     var nextROW: Int = 0
@@ -25,6 +26,8 @@ class TankLand {
 			self.numberRows = numberRows	
 			self.messageCenter = [:]
 			self.lastLivingTank = nil
+      //self.log = log
+ 
 			grid = Array(repeating: Array(repeating: nil, count: numberCols), count: numberRows)
 			turn = 0
  	//other init stuff
@@ -226,5 +229,8 @@ class TankLand {
             // print(tank.preActions)
             // print(tank.postActions)
         }
+        printLog(log: log)
+        log.removeAll()
+        
     }
 }

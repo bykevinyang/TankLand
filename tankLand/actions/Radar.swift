@@ -42,8 +42,10 @@ extension TankLand {
 		// Do check on radius
 		if rAct.radius <= 8 && rAct.radius >= 0 {
 			cost = Constants.costOfRadarByUnitsDistance[rAct.radius]
+      addLog(cmd: "\(tank.id) ran a radar of \(rAct.radius) units")
 		} else {
-            print("Radar radius is invalid")
+            //print("Radar radius is invalid")
+      addLog(cmd: "Radar radius of \(rAct.radius) is invalid")
 			return nil
     }
 
