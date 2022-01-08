@@ -74,9 +74,10 @@ extension TankLand {
                 { print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); addLog(cmd: "Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); return (false, true) }
                 print("\(gameObject.id) tanked the damage from mine/rover \(occupyingGO.id)")
                 self[nextROW, nextCOL] = gameObject
+                gameObject.setPosition(Position(nextROW, nextCOL))
                 return (true, false)
             }
-        }   
+        }
         //just move to spot if there is nothing there
         gameObject.chargeEnergy(Constants.costOfMovingTankPerUnitDistance[moveAction.distance])
         gameObject.setPosition(Position(nextROW, nextCOL))

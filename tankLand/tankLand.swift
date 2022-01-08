@@ -57,9 +57,7 @@ class TankLand {
 		func checkWinner() -> Bool {
 			let alivePlayers = getAllObjects().0.count
 			if alivePlayers == 1 {
-					print("SETTING WINNER")
 					let remaingingTanks = getAllObjects().0
-					print("REMAINING TANKS")
 					setWinner(lastTankStanding: remaingingTanks[0])
 					print("Winner has been found!: \(remaingingTanks[0])")
 					// Note: This only works assuming that there were more than two tanks started on the board		
@@ -143,14 +141,22 @@ class TankLand {
 
 				var allObjects: [[GameObject]] = [tanks, mines, rovers]
 
+                var needToFilter = false
 				// Remove dead objects
 				for (i, objects) in allObjects.enumerated() {
 						for (j, object) in objects.enumerated() {
 								if !checkLife(gameObject: object) {
+                                        needToFilter = true
 										removeGameObject(object)
-										allObjects[i].remove(at: j)
+                                        if self.checkWinner() {
+                                            return true
+                                        }
 								}
 						}
+                        if needToFilter == true {
+                            allObjects[i] = objects.filter { checkLife(gameObject: $0) }
+                            needToFilter = false
+                        }
 				}
 
 				for r in rovers {
@@ -199,10 +205,8 @@ class TankLand {
 
 				// Do PreActions
 				for tank in tanks {
-						print(tank.preActions)
 						for (actionType, preAction) in tank.preActions {
 								if let actionFunc = preactionsToFunc[actionType] {
-										print(actionType)
 										let result = actionFunc(tank, preAction)
 								}
 						}
