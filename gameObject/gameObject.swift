@@ -2,7 +2,7 @@ enum GameObjectType {
   case Tank, Mine, Rover
 }
 
-class GameObject: CustomStringConvertible {
+class GameObject: CustomStringConvertible, Hashable, Equatable {
     let type: GameObjectType
     let id: String
     private (set) var position: Position
@@ -25,5 +25,30 @@ class GameObject: CustomStringConvertible {
     
     final func setPosition(_ newPosition: Position) {
         self.position = newPosition
+    }
+
+    static func == (lhs: GameObject, rhs: GameObject) -> Bool {
+        return
+            ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+
+    static func hash(into hasher: inout Hasher) {
+        return hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+// Some black magic to make the compiler happy
+// Basically extends Hashable and Equatable to classes and not just structs
+extension Hashable where Self: AnyObject {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+    
+extension Equatable where Self: AnyObject {
+
+    static func == (lhs:Self, rhs:Self) -> Bool {
+        return lhs === rhs
     }
 }

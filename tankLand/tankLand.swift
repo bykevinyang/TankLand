@@ -54,19 +54,20 @@ class TankLand {
         lastLivingTank = lastTankStanding
     }
 
-		func checkWinner() -> Bool {
-			let alivePlayers = getAllObjects().0.count
-			if alivePlayers == 1 {
-					print("SETTING WINNER")
-					let remaingingTanks = getAllObjects().0
-					print("REMAINING TANKS")
-					setWinner(lastTankStanding: remaingingTanks[0])
-					print("Winner has been found!: \(remaingingTanks[0])")
-					// Note: This only works assuming that there were more than two tanks started on the board		
-					return true
-			}
-			return false
-		}
+    func checkWinner() -> Bool {
+        var remainingTanks = getAllObjects().0
+        print(remainingTanks)
+        let alivePlayers = remainingTanks.count
+        if alivePlayers == 1 {
+                if let remainingTank = remainingTanks.popFirst() {
+                    setWinner(lastTankStanding: remainingTank)
+                    print("Winner has been found!: \(remainingTank.id)")
+                    // Note: This only works assuming that there were more than two tanks started on the board		
+                    return true
+                }
+        }
+        return false
+    }
 
     func populateTankLand(_ objects: [GameObject]) {
 			for gameObject in objects {
@@ -81,6 +82,7 @@ class TankLand {
     
     func addGameObject(_ gameObject: GameObject) {
 			self[gameObject.position.row, gameObject.position.col] = gameObject
+            print("\(gameObject.id) has been added to the grid at position \(gameObject.position)")
 			// Add logger message here!
 	}
     
@@ -98,22 +100,22 @@ class TankLand {
 //         print("****Winner is...\(lastLivingTank!)")
 //     }
 	
-    func getAllObjects() -> ([Tank], [Mine], [Rover]) {
-		var tanks : [Tank] = []
-		var mines : [Mine] = []
-		var rovers : [Rover] = []
+    func getAllObjects() -> (Set<Tank>, Set<Mine>, Set<Rover>) {
+		var tanks: Set<Tank> =  Set<Tank>()
+		var mines : Set<Mine> =  Set<Mine>() 
+		var rovers : Set<Rover> =  Set<Rover>() 
 		for r in 0..<self.numberRows {
             for c in 0..<self.numberCols {
                 if let object = self[r,c] {
                     if object.type == .Tank {
 						let tank = object as! Tank
-                        tanks.append(tank)
+                        tanks.insert(tank)
                     } else if object.type == .Rover {
 						let rover = object as! Rover
-						rovers.append(rover)
+						rovers.insert(rover)
                 } else if object.type == .Mine {
                     let mine = object as! Mine
-                    mines.append(mine)
+                    mines.insert(mine)
                     }
                 }
             }
@@ -121,7 +123,7 @@ class TankLand {
 		return (tanks, mines, rovers)
     }
 
-		func getAllTanks() -> [GameObject] {
+		func getAllTanks() -> Set<Tank> {
 			let objects = getAllObjects()
 			return objects.0
 		}
@@ -130,9 +132,9 @@ class TankLand {
 			if !gameOver {
 				let objects = getAllObjects()		// Returns tuple of ([Tanks], [Mine], [Rover])
 				
-				var tanks = objects.0
-				var mines = objects.1
-				var rovers = objects.2
+				var tanks: [Tank] = objects.0.shuffled()
+				var mines: [Mine] = objects.1.shuffled()
+				var rovers: [Rover] = objects.2.shuffled()
 
 				var alivePlayers = tanks.count
 
@@ -143,14 +145,23 @@ class TankLand {
 
 				var allObjects: [[GameObject]] = [tanks, mines, rovers]
 
+                var needToFilter = false
 				// Remove dead objects
 				for (i, objects) in allObjects.enumerated() {
 						for (j, object) in objects.enumerated() {
 								if !checkLife(gameObject: object) {
+                                        print("\(object.id) perished from life support charge")
+                                        needToFilter = true
 										removeGameObject(object)
-										allObjects[i].remove(at: j)
+                                        if self.checkWinner() {
+                                            return true
+                                        }
 								}
 						}
+                        if needToFilter == true {
+                            allObjects[i] = objects.filter { checkLife(gameObject: $0) }
+                            needToFilter = false
+                        }
 				}
 
 				for r in rovers {
@@ -192,17 +203,13 @@ class TankLand {
 
 						// Compute PreActions
 				for tank in tanks {
-						for tank in objects.0 {
-								tank.computePreActions()
-						}
+					tank.computePreActions()
 				}
 
 				// Do PreActions
 				for tank in tanks {
-						print(tank.preActions)
 						for (actionType, preAction) in tank.preActions {
 								if let actionFunc = preactionsToFunc[actionType] {
-										print(actionType)
 										let result = actionFunc(tank, preAction)
 								}
 						}
