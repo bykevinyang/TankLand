@@ -15,10 +15,10 @@ class ViewController {
         tankLand.printGrid()
 		print("Enter Turns to Run: ", terminator: "")
 		var input = readLine()
+        var turns = 0
 		if var command = input {
 			while command != "quit" {
 				if command == "run" {
-                    var turns = 0
 					while !tankLand.gameOver {
                         print("TURN \(turns):")
 						tankLand.doTurn()
@@ -30,10 +30,10 @@ class ViewController {
 				}
 				if let cycles = Int(command){
                     for i in 0..<cycles {
-
-                        print(tankLand.getAllTanks())
+                        print("TURN \(turns):")
                         tankLand.doTurn()
                         tankLand.printGrid()
+                        turns += 1 
                     }
                 } else {
                     print("Enter a number of turns to run OR 'run' to fast forward")

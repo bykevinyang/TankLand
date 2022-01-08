@@ -66,7 +66,7 @@ extension TankLand {
                         let ogEnergy = object.energy
                         object.chargeEnergy(damage)	
                         if !checkLife(gameObject: object) {
-                            print("\(object.id) was hit with collateral \(damage) and died")
+                            print("\(object.id) was hit with missile collateral \(damage) and died")
                             self[currentRow + rowShift, currentCol + colShift] = nil
                             return (true, true)
                         } else {

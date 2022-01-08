@@ -50,11 +50,10 @@ extension TankLand {
 		if preAction.action == .SendMessage {
 			let action = preAction as! SendMessageAction
 			MessageCenter.add(key: action.id, message: action.message)
-            addLog(cmd: "\(tank.id) sent a message: | \(action.message) | on channel | \(action.id) |")
-			print(MessageCenter.messages)
+            addLog(cmd: "\(tank.id) sent a message: '\(action.message)' on channel |\(action.id)|")
 			return true
 		}
-    return false
+    return false  
 	}
 
 	func receiveMessage(tank: Tank, preAction: PreAction) -> Bool {
@@ -62,7 +61,7 @@ extension TankLand {
 			let action = preAction as! ReceiveMessageAction
 			let message = MessageCenter.read(key: action.key)
             tank.receivedMessage = message
-            addLog(cmd: "\(tank.id) received a message: | \(message!) | on channel | \(action.key) |")
+            addLog(cmd: "\(tank.id) received a message: '\(message!)' on channel |\(action.key)|")
 			return true
   	}
     return false
