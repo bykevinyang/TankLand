@@ -140,6 +140,7 @@ class TankLand {
 				var alivePlayers = tanks.count
 
 				// Charge life support
+                print("All objects charged life support")
 				for tank in tanks { tank.chargeEnergy(Constants.costLifeSupportTank) }
 				for mine in mines { mine.chargeEnergy(Constants.costLifeSupportMine) }
 				for rover in rovers { rover.chargeEnergy(Constants.costLifeSupportRover) }
@@ -243,7 +244,7 @@ class TankLand {
 
 						// Clear Post and Preactions 
 				for tank in objects.0 {
-                        print(tank.shield)
+                        print("\(tank.id): \(tank.shield)")
 						// print("Before Clear")	
 						// print(tank.preActions)
 						// print(tank.postActions)
@@ -253,8 +254,8 @@ class TankLand {
 						// print(tank.preActions)
 						// print(tank.postActions)
 				}
-				printLog(log: log)
-				log.removeAll()
+				// printLog(log: log)
+				// log.removeAll()
                 checkWinner()
 				return false
 		} else {

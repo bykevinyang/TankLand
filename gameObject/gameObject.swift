@@ -20,12 +20,13 @@ class GameObject: CustomStringConvertible, Hashable, Equatable {
         if self.type == .Tank {
             let tank = self as! Tank
             let damageWithShield = damage - tank.shield
-            tank.setShield(0) // Reset shield
             if damageWithShield > 0 {
+                tank.setShield(0) // Reset shield
                 self.chargeEnergy(damageWithShield)
                 print("\(tank.id) charged \(damageWithShield) damage")
                 return damageWithShield
             } else {
+                tank.setShield(tank.shield - damage)
                 return 0
             }
         } else {

@@ -11,8 +11,8 @@ class ViewController {
     }
 
     func test() {
-       let test1 = TestTank(id: "TEST1", position: Position(5,5), instructions: "Hi")
-       let test2 = TestTank(id: "TEST2", position: Position(2, 3), instructions: "Hi")
+       let test1 = TestTank(id: "T1", position: Position(5,5), instructions: "Hi")
+       let test2 = TestTank(id: "T2", position: Position(2, 3), instructions: "Hi")
        tankLand.addGameObject(test1)
        tankLand.addGameObject(test2)
     }

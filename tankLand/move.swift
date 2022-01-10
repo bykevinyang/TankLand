@@ -136,8 +136,8 @@ extension TankLand {
             gameObject.setPosition(Position(nextROW, nextCOL))
             self[nextROW, nextCOL] = gameObject
             self[ogROW, ogCOL] = nil
-            print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
-            addLog(cmd: "\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+            print("\(gameObject.id) moved to (\(nextROW),\(nextCOL))")
+            addLog(cmd: "\(gameObject.id) moved to (\(nextROW),\(nextCOL))")
             return (true, false)
         }
     return (false, false)
