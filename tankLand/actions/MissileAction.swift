@@ -51,8 +51,7 @@ extension TankLand {
                 if let object = self[currentRow + rowShift, currentCol + colShift] {
                     if object.position == missileAction.position { // Direct Hit
                         let ogEnergy = object.energy
-                        let damage = missileAction.energy * Constants.missileStrikeMultiple
-                        object.chargeDamage(damage: damage)
+                        let damage = object.chargeDamage(damage: missileAction.energy * Constants.missileStrikeMultiple)
                         //removes GO from grid is it has <=0 energy
                         if checkLife(gameObject: object) == false{
                             //self.removeGameObject(object)
@@ -62,8 +61,7 @@ extension TankLand {
                             return (true, true)
                         }
                     } else { // Collat Hit
-                        let damage = cost*Constants.missileStrikeMultipleCollateral
-                        let ogEnergy = object.energy
+                        let damage = object.chargeDamage(damage: cost*Constants.missileStrikeMultipleCollateral)
                         object.chargeDamage(damage: damage)
                         if !checkLife(gameObject: object) {
                             print("\(object.id) was hit with missile collateral \(damage) and died")
