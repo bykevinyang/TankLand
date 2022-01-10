@@ -68,8 +68,12 @@ extension TankLand {
                 self[ogROW, ogCOL] = nil
                 
                 // Check if tank is still alive after mine/rover blows up
-                let damage = occupyingGO.energy * Constants.mineStrikeMultiple
-                gameObject.chargeEnergy(damage)
+                let totalDamage = occupyingGO.energy * Constants.mineStrikeMultiple
+                var tank = gameObject as! Tank
+                let damageWithShield = totalDamage - tank.shield
+                gameObject.chargeEnergy(damageWithShield)
+                tank.setShield(0) // Used up shield
+
                 if checkLife(gameObject: gameObject) == false 
                 { print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); addLog(cmd: "Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); return (false, true) }
                 print("\(gameObject.id) tanked the damage from mine/rover \(occupyingGO.id)")
@@ -113,11 +117,24 @@ extension TankLand {
                 //print("THERE IS AN OBJECT IN THE SPOT")
             
                 gameObject.chargeEnergy(Constants.costOfMovingRover)
+
                 //if it's a tank, rover moves into tank and explodes
-                let damage = rover.energy * Constants.mineStrikeMultiple
-                occupyingGO.chargeEnergy(damage) // Damage whatever was there
-                print("\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
-                addLog(cmd: "\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
+                let totalDamage = rover.energy * Constants.mineStrikeMultiple
+                let damageWithShield: Int
+                if occupyingGO.type == .Tank 
+                {
+                    var occupyingTank = occupyingGO as! Tank
+                    damageWithShield = totalDamage - occupyingTank.shield
+                    occupyingTank.setShield(0) // Used up shield
+                } else {
+                    damageWithShield = totalDamage
+                }
+                
+                // Cost of blowing up
+                occupyingGO.chargeEnergy(damageWithShield)
+
+                print("\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damageWithShield)")
+                addLog(cmd: "\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damageWithShield)")
                 if checkLife(gameObject: occupyingGO) == false {
                     print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)")
                     addLog(cmd: "Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)")
@@ -129,6 +146,7 @@ extension TankLand {
                 self.removeGameObject(gameObject) // Delete rover from board since it blew up
                 return (true, false)
             }
+
             //just move to spot if there is nothing there
             gameObject.chargeEnergy(Constants.costOfMovingRover)
             gameObject.setPosition(Position(nextROW, nextCOL))
