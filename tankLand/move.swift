@@ -68,11 +68,7 @@ extension TankLand {
                 self[ogROW, ogCOL] = nil
                 
                 // Check if tank is still alive after mine/rover blows up
-                let totalDamage = occupyingGO.energy * Constants.mineStrikeMultiple
-                var tank = gameObject as! Tank
-                let damageWithShield = totalDamage - tank.shield
-                gameObject.chargeEnergy(damageWithShield)
-                tank.setShield(0) // Used up shield
+                let damage = gameObject.chargeDamage(damage: occupyingGO.energy * Constants.mineStrikeMultiple)
 
                 if checkLife(gameObject: gameObject) == false 
                 { print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); addLog(cmd: "Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); return (false, true) }
@@ -115,26 +111,14 @@ extension TankLand {
 
             if let occupyingGO = self[nextROW, nextCOL] {
                 //print("THERE IS AN OBJECT IN THE SPOT")
-            
-                gameObject.chargeEnergy(Constants.costOfMovingRover)
 
-                //if it's a tank, rover moves into tank and explodes
-                let totalDamage = rover.energy * Constants.mineStrikeMultiple
-                let damageWithShield: Int
-                if occupyingGO.type == .Tank 
-                {
-                    var occupyingTank = occupyingGO as! Tank
-                    damageWithShield = totalDamage - occupyingTank.shield
-                    occupyingTank.setShield(0) // Used up shield
-                } else {
-                    damageWithShield = totalDamage
-                }
+                gameObject.chargeEnergy(Constants.costOfMovingRover)
                 
                 // Cost of blowing up
-                occupyingGO.chargeEnergy(damageWithShield)
+                let damage = occupyingGO.chargeDamage(damage: rover.energy * Constants.mineStrikeMultiple)
 
-                print("\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damageWithShield)")
-                addLog(cmd: "\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damageWithShield)")
+                print("\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
+                addLog(cmd: "\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
                 if checkLife(gameObject: occupyingGO) == false {
                     print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)")
                     addLog(cmd: "Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)")
