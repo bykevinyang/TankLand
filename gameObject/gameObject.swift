@@ -15,6 +15,26 @@ class GameObject: CustomStringConvertible, Hashable, Equatable {
         self.position = position
         self.energy = energy
     }
+
+    final func chargeDamage(damage: Int) -> Int{
+        if self.type == .Tank {
+            let tank = self as! Tank
+            let damageWithShield = damage - tank.shield
+            if damageWithShield > 0 {
+                tank.setShield(0) // Reset shield
+                self.chargeEnergy(damageWithShield)
+                print("\(tank.id) charged \(damageWithShield) damage")
+                return damageWithShield
+            } else {
+                tank.setShield(tank.shield - damage)
+                return 0
+            }
+        } else {
+            self.chargeEnergy(damage)
+            return damage
+        }
+    }
+
     final func chargeEnergy(_ amount: Int) {
         self.energy -= amount
     }

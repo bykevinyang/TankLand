@@ -10,8 +10,15 @@ class ViewController {
         tankLand.addGameObject(stupidTank)
     }
 
+    func test() {
+       let test1 = TestTank(id: "T1", position: Position(5,5), instructions: "Hi")
+       let test2 = TestTank(id: "T2", position: Position(2, 3), instructions: "Hi")
+       tankLand.addGameObject(test1)
+       tankLand.addGameObject(test2)
+    }
+
 	func run() -> Void {
-        debugPopulation()
+        test() 
         tankLand.printGrid()
 		print("Enter Turns to Run: ", terminator: "")
 		var input = readLine()

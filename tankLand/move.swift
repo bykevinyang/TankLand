@@ -68,8 +68,8 @@ extension TankLand {
                 self[ogROW, ogCOL] = nil
                 
                 // Check if tank is still alive after mine/rover blows up
-                let damage = occupyingGO.energy * Constants.mineStrikeMultiple
-                gameObject.chargeEnergy(damage)
+                let damage = gameObject.chargeDamage(damage: occupyingGO.energy * Constants.mineStrikeMultiple)
+
                 if checkLife(gameObject: gameObject) == false 
                 { print("Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); addLog(cmd: "Mine/Rover \(occupyingGO.id) blew up \(gameObject.id)"); return (false, true) }
                 print("\(gameObject.id) tanked the damage from mine/rover \(occupyingGO.id)")
@@ -111,11 +111,12 @@ extension TankLand {
 
             if let occupyingGO = self[nextROW, nextCOL] {
                 //print("THERE IS AN OBJECT IN THE SPOT")
-            
+
                 gameObject.chargeEnergy(Constants.costOfMovingRover)
-                //if it's a tank, rover moves into tank and explodes
-                let damage = rover.energy * Constants.mineStrikeMultiple
-                occupyingGO.chargeEnergy(damage) // Damage whatever was there
+                
+                // Cost of blowing up
+                let damage = occupyingGO.chargeDamage(damage: rover.energy * Constants.mineStrikeMultiple)
+
                 print("\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
                 addLog(cmd: "\(gameObject.id) blew up and damaged \(occupyingGO.id) with \(damage)")
                 if checkLife(gameObject: occupyingGO) == false {
@@ -129,13 +130,14 @@ extension TankLand {
                 self.removeGameObject(gameObject) // Delete rover from board since it blew up
                 return (true, false)
             }
+
             //just move to spot if there is nothing there
             gameObject.chargeEnergy(Constants.costOfMovingRover)
             gameObject.setPosition(Position(nextROW, nextCOL))
             self[nextROW, nextCOL] = gameObject
             self[ogROW, ogCOL] = nil
-            print("\(gameObject.id) moved to \(nextROW),\(nextCOL)")
-            addLog(cmd: "\(gameObject.id) moved to \(nextROW),\(nextCOL)")
+            print("\(gameObject.id) moved to (\(nextROW),\(nextCOL))")
+            addLog(cmd: "\(gameObject.id) moved to (\(nextROW),\(nextCOL))")
             return (true, false)
         }
     return (false, false)

@@ -20,6 +20,8 @@ class TankLand {
     var gameOver = false
     var lastLivingTank: GameObject?
     //Other useful properties go here
+
+    var numberTanksAdded = 0
    
     init(_ numberRows: Int, _ numberCols: Int) {
 			self.numberCols = numberCols
@@ -56,9 +58,8 @@ class TankLand {
 
     func checkWinner() -> Bool {
         var remainingTanks = getAllObjects().0
-        print(remainingTanks)
         let alivePlayers = remainingTanks.count
-        if alivePlayers == 1 {
+        if alivePlayers <= 1 {
                 if let remainingTank = remainingTanks.popFirst() {
                     setWinner(lastTankStanding: remainingTank)
                     print("Winner has been found!: \(remainingTank.id)")
@@ -83,7 +84,7 @@ class TankLand {
     func addGameObject(_ gameObject: GameObject) {
 			self[gameObject.position.row, gameObject.position.col] = gameObject
             print("\(gameObject.id) has been added to the grid at position \(gameObject.position)")
-			// Add logger message here!
+            // Add logger message here!
 	}
     
     func removeGameObject(_ gameObject: GameObject) {
@@ -139,6 +140,7 @@ class TankLand {
 				var alivePlayers = tanks.count
 
 				// Charge life support
+                print("All objects charged life support")
 				for tank in tanks { tank.chargeEnergy(Constants.costLifeSupportTank) }
 				for mine in mines { mine.chargeEnergy(Constants.costLifeSupportMine) }
 				for rover in rovers { rover.chargeEnergy(Constants.costLifeSupportRover) }
@@ -242,6 +244,7 @@ class TankLand {
 
 						// Clear Post and Preactions 
 				for tank in objects.0 {
+                        print("\(tank.id): \(tank.shield)")
 						// print("Before Clear")	
 						// print(tank.preActions)
 						// print(tank.postActions)
@@ -251,11 +254,12 @@ class TankLand {
 						// print(tank.preActions)
 						// print(tank.postActions)
 				}
-				printLog(log: log)
-				log.removeAll()
+				// printLog(log: log)
+				// log.removeAll()
+                checkWinner()
 				return false
 		} else {
-			print("Game Over. \(lastLivingTank!.id). Got that Victory Royale)")
+			print("Game Over. \(lastLivingTank!.id) got that Victory Royale")
 			return true
 		}
 	}

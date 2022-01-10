@@ -33,6 +33,7 @@ extension TankLand {
 
 			let rover = Rover(sender: tank, mineAction: dropAction, randomMove: randomMove)
 			self.addGameObject(rover)
+            print("\(tank.id) dropped rover \(rover.id) and was charged \(Constants.costOfReleasingRover) energy")
 			return true
 		} else {
 			print("\(tank) does not have enough energy to create a rover")

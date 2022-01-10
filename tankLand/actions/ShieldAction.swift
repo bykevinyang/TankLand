@@ -22,6 +22,7 @@ extension TankLand {
             addLog(cmd: "\(tank.id) cannot set shields because it does not have enough energy")
             return false
         }
+        print("\(tank.id) set shields to \(shieldAction.power). Cost: \(cost)")
         tank.chargeEnergy(cost)
         tank.setShield(cost * Constants.shieldPowerMultiple)
 		
