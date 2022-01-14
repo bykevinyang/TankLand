@@ -57,8 +57,7 @@ class GameObject: CustomStringConvertible, Hashable, Equatable {
     }
 }
 
-// Some black magic to make the compiler happy
-// Basically extends Hashable and Equatable to classes and not just structs
+// Extends Hashable and Equatable to classes and not just structs
 extension Hashable where Self: AnyObject {
 
     func hash(into hasher: inout Hasher) {

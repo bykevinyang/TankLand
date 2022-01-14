@@ -9,9 +9,6 @@ enum ActionType {
     case ShieldAction
 }
 
-
-
-//where you write the methods   extends tankland
 protocol Action: CustomStringConvertible {
     var  action: ActionType {get}
     var description: String {get}

@@ -3,7 +3,7 @@ struct ShieldAction : PreAction {
 	var power: Int	
 	var energy: Int
   var description: String {
-    return("hi")
+    return("Shield: \(power) power")
   }
   init (energy: Int) {
     self.action = .ShieldAction
@@ -18,7 +18,7 @@ extension TankLand {
         let shieldAction = shieldAction as! ShieldAction
         let cost = shieldAction.energy
         guard tank.energy > cost else {
-            //print("SHIELD FAILED...\(tank.id) DOES NOT HAVE ENOUGH ENERGY")
+            print("SHIELD FAILED...\(tank.id) DOES NOT HAVE ENOUGH ENERGY")
             addLog(cmd: "\(tank.id) cannot set shields because it does not have enough energy")
             return false
         }
@@ -26,11 +26,8 @@ extension TankLand {
         tank.chargeEnergy(cost)
         tank.setShield(cost * Constants.shieldPowerMultiple)
 		
-	        //PRINT STATEMENT FOR DEBUGGING PURPOSES WHILE LOGGER IS DEVELOPED
-        //print("\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
+        print("\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
         addLog(cmd: "\(tank.id) SET SHIELD TO \(cost * Constants.shieldPowerMultiple)")
-          //UPDATE LOGGER HERE
-
         return true
   }
 }

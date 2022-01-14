@@ -3,7 +3,6 @@ struct RadarResult: CustomStringConvertible {
 	let id: String
 	let energy: Int
 	
-	// CHANGE ObjectType to type Tank and not GameObjectType
 	let objectType: GameObjectType
 
 	init(position:Position, id:String, energy:Int, objectType: GameObjectType) {
@@ -44,8 +43,8 @@ extension TankLand {
 			cost = Constants.costOfRadarByUnitsDistance[rAct.radius]
       addLog(cmd: "\(tank.id) ran a radar of \(rAct.radius) units")
 		} else {
-            //print("Radar radius is invalid")
-      addLog(cmd: "Radar radius of \(rAct.radius) is invalid")
+      print("Radar radius of \(rAct.radius) is invalid")
+			addLog(cmd: "Radar radius of \(rAct.radius) is invalid")
 			return nil
     }
 

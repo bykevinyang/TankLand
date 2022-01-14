@@ -1,5 +1,4 @@
 struct MoveAction: PostAction {
-    //let action: ActionType
     let action: ActionType
     let distance: Int
     let direction: Direction
@@ -23,7 +22,6 @@ extension TankLand {
   }
 }
 
-//ethan's also funky move func
 func outOfBounds(row: Int, col: Int) -> Bool {
   if ((row > 0 && row < 14) || (row == 0 || row == 14)) && ((col > 0 && col < 14) || col == 0 || col == 14) {
     return false
@@ -67,7 +65,6 @@ extension TankLand {
    
           if let occupyingGO = self[nextROW, nextCOL] {
               //if it's a tank, tank will not move
-              //print("DEBUG 2 DEBUG 2 DEBUG 2 DEBUG 2 DEBUG 2 DEBUG 2") 
               if occupyingGO.type == .Tank 
               { print("\(gameObject) cannot move because there is a tank in the new spot"); addLog(cmd: "\(gameObject.id) cannot move because there is a tank in the new spot" ); return (false, false) }
               if occupyingGO.type == .Mine || occupyingGO.type == .Rover {
@@ -119,7 +116,6 @@ extension TankLand {
             // Check if there is something in spot already, different things will happen for tank, rover/mine, or nothing in the new spot
             if outOfBounds(row: nextROW, col: nextCOL) == true { print("\(gameObject.id) cannot move because it will be out of bounds"); return (false, false) }
             if let occupyingGO = self[nextROW, nextCOL] {
-                //print("THERE IS AN OBJECT IN THE SPOT")
 
                 gameObject.chargeEnergy(Constants.costOfMovingRover)
                 

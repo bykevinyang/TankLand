@@ -3,14 +3,12 @@ import Foundation
 struct MissileAction: PostAction {
     var action: ActionType
     var energy: Int
-    // var sendersender: GameObject
     var position: Position
     var damage: Int
         
     init (energy: Int, position: Position) {   
     self.action = .MissileAction
     self.energy = energy
-    // self.sender = sender
     self.position = position
         self.damage = energy * Constants.missileStrikeMultiple
     }
@@ -21,12 +19,10 @@ struct MissileAction: PostAction {
 }
 
 extension TankLand {
-    // FIX BRAKCET PROBLEM
     func sendMissile(tank: Tank, missileAction: PostAction ) -> (Bool, Bool) { // Returns (Succes of missle launch, whether or not something died b/c of it)
-        //print("HERE BEFOE SEND MISSILE UNWRAP")
         if missileAction.action != .MissileAction { return (false, false) }
-        //print("HERE IN MISSILE ACTION")
         let missileAction = missileAction as! MissileAction
+
         //calculating distance
         var distance: Int = 0
         distance += (missileAction.position.row - tank.position.row) * (missileAction.position.row - tank.position.row)
@@ -42,7 +38,6 @@ extension TankLand {
         }
         tank.chargeEnergy(cost)
 
-            // ADD IN DAMAGING PART FOR SENDMISSILE
         let currentRow = missileAction.position.row
         let currentCol = missileAction.position.col
         print("\(tank.id) sent a missile to \(missileAction.position) and used \(cost) energy")
@@ -54,7 +49,6 @@ extension TankLand {
                         let damage = object.chargeDamage(damage: missileAction.energy * Constants.missileStrikeMultiple)
                         //removes GO from grid is it has <=0 energy
                         if checkLife(gameObject: object) == false{
-                            //self.removeGameObject(object)
                             self[currentRow + rowShift, currentCol + colShift] = nil
                             tank.gainEnergy(ogEnergy / 4)
                             print("\(object.id) was hit with direct \(damage) and died")

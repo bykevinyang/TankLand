@@ -31,17 +31,14 @@ struct MessageCenter {
     MessageCenter.messages[key] = message
 	}
 	
-	// Fix tank later
 	static func clear() {
 		MessageCenter.messages = [:]
 	}
 
 	static func read(key: String) -> String? {
-		//print("key")
 		if let secretMessage = MessageCenter.messages[key] {
 			return secretMessage
 		}
-		//print("RETURNING NIL FOR READ")
 		return nil
 	}
 }
@@ -49,9 +46,7 @@ struct MessageCenter {
 extension TankLand {
 	func sendMessage(tank: Tank, preAction: PreAction) -> Bool {
 		if preAction.action == .SendMessage {
-			//print("UNWRAPPING SEND")
 			let action = preAction as! SendMessageAction
-			//print("UNWRAPPING SUCCESFUL")
 			MessageCenter.add(key: action.id, message: action.message)
             addLog(cmd: "\(tank.id) sent a message: '\(action.message)' on channel |\(action.id)|")
 			return true
@@ -61,15 +56,12 @@ extension TankLand {
 
 	func receiveMessage(tank: Tank, preAction: PreAction) -> Bool {
 		if preAction.action == .ReceiveMessage {
-			//print("UNWRAPPING RECEIVE")
 			let action = preAction as! ReceiveMessageAction
-			//print("UNWRAPPING RECEIVE SUCCESS")
 			let message = MessageCenter.read(key: action.key)
 			print(message)
 		  tank.receivedMessage = message
 			let printMessage = message ?? "none"
 			print("\(tank.id) received a message: \(printMessage) on channel |\(action.key)|")
-            // addLog(cmd: "\(tank.id) received a message: '\(message!)' on channel |\(action.key)|")
 			return true
   	}
     return false

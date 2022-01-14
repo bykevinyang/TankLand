@@ -6,7 +6,6 @@
 //TankLandActions contains the code that implements the actions; the most complex code in TankLand
 
 class TankLand {
-    //var log: [String] = []
     var ogROW: Int = 0
     var ogCOL: Int = 0
     var nextROW: Int = 0
@@ -19,7 +18,6 @@ class TankLand {
 
     var gameOver = false
     var lastLivingTank: GameObject?
-    //Other useful properties go here
 
     var numberTanksAdded = 0
    
@@ -28,11 +26,9 @@ class TankLand {
 			self.numberRows = numberRows	
 			self.messageCenter = [:]
 			self.lastLivingTank = nil
-      //self.log = log
  
 			grid = Array(repeating: Array(repeating: nil, count: numberCols), count: numberRows)
 			turn = 0
- 	//other init stuff
     }
 
     func isOnGrid(row: Int, col: Int) -> Bool {
@@ -77,29 +73,16 @@ class TankLand {
                 gameObject.setPosition(Position(randomRow, randomCol))
                 self.addGameObject(gameObject)
             }
-        //Sample
-        //addGameObject( gameObject: MyTank(row: 2, col: 2, energy: 20000, id: "T1", instructions: ""))
     }
     
     func addGameObject(_ gameObject: GameObject) {
 			self[gameObject.position.row, gameObject.position.col] = gameObject
             print("\(gameObject.id) has been added to the grid at position \(gameObject.position)")
-            // Add logger message here!
 	}
     
     func removeGameObject(_ gameObject: GameObject) {
             self[gameObject.position.row, gameObject.position.col] = nil
-            // Add logger message here!
     }
-
-//     func runGame(){
-//         populateTankLand()
-//         printGrid()
-//         while !gameOver {
-//          //This while loop is the driver for TankLand      
-// }
-//         print("****Winner is...\(lastLivingTank!)")
-//     }
 	
     func getAllObjects() -> (Set<Tank>, Set<Mine>, Set<Rover>) {
 		var tanks: Set<Tank> =  Set<Tank>()
@@ -165,9 +148,7 @@ class TankLand {
                         }
 				}
         
-				// print("BEFORE ROVERS")	
 				for r in rovers {
-          //print("Debug 4 Debug 4 Debug 4 Debug 4 ")
 					let result = self.move(gameObject: r, action: nil) 
           if type(of: result) == (Bool, Bool).self {
             let boolResult = result as! (Bool, Bool) 
@@ -178,7 +159,6 @@ class TankLand {
             }
           }        
 				}
-				// print("AFTER ROVERS")
 
 				typealias PreActionFunc = (Tank, PreAction) -> Any
 				typealias PostActionFunc = (Tank, PostAction) -> Any
@@ -214,8 +194,6 @@ class TankLand {
 				for tank in tanks {
 						print(tank)
 						for (actionType, preAction) in tank.preActions {
-							// print(tank.preActions)
-							// print(actionType, preAction)
 								if let actionFunc = preactionsToFunc[actionType] {
 										print(actionFunc)	
 										let result = actionFunc(tank, preAction)
@@ -223,7 +201,6 @@ class TankLand {
 						}
 				}
 
-				print("COMPUTING POSTACTIONS")
 				// Compute PostActions
 				for tank in tanks {
 						for tank in objects.0 {
@@ -231,17 +208,12 @@ class TankLand {
 						}
 				}
 
-				// print("On to postactions")
 				// Do PostActions
 				for tank in tanks {
 						for currentActionToExecute in orderOfPostActions { // To maintain the order in which to execute the post actions
 								if let tankAction = tank.postActions[currentActionToExecute] {
-										print("Running postAction")
 										if let postAction = postactionsToFunc[currentActionToExecute] {
-												print("\(tank.id)")
-												print("Running postAction: \(tankAction)")
 												let result = postAction(tank, tankAction) // Actual execution of the post action
-												print("executed func")
 												if type(of: result) == (Bool, Bool).self {
 														let boolResult = result as! (Bool, Bool)
 														if boolResult.1 == true {
@@ -257,18 +229,11 @@ class TankLand {
 						// Clear Post and Preactions 
 				for tank in objects.0 {
             print("\(tank.id): \(tank.shield)")
-						// print("Before Clear")	
-						// print(tank.preActions)
-						// print(tank.postActions)
-						// print("After Clear")
+					
 						tank.preActions.removeAll()
 						tank.postActions.removeAll()
-						// print(tank.preActions)
-						// print(tank.postActions)
 				}
-				// printLog(log: log)
-				// log.removeAll()
-                checkWinner()
+        checkWinner()
 				return false
 		} else {
 			print("Game Over. \(lastLivingTank!.id) got that Victory Royale")

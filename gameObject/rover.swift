@@ -12,8 +12,6 @@ class Rover: Mine {
 		super.init(sender: self.sender, mineAction: self.mA) 
 		if randomMove == true {
 			super.mineAction.moveDirection = randomDirection
-            //print("HERE")
-            //print(super.mineAction.moveDirection)
 		}
 	}
 }
@@ -21,9 +19,7 @@ class Rover: Mine {
 extension TankLand {
 	func dropRover(tank: Tank, mineAction: PostAction) -> Bool {
 		if tank.energy > Constants.costOfReleasingRover {
-			//print("HERE")
 			let dropAction = mineAction as! MineAction
-			//print("PASSED")
 			let randomMove: Bool
 			if dropAction.moveDirection == nil {
 					randomMove = true
