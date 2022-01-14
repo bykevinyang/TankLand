@@ -16,14 +16,14 @@ class Rover: Mine {
             //print(super.mineAction.moveDirection)
 		}
 	}
-
 }
 
 extension TankLand {
 	func dropRover(tank: Tank, mineAction: PostAction) -> Bool {
 		if tank.energy > Constants.costOfReleasingRover {
+			//print("HERE")
 			let dropAction = mineAction as! MineAction
-			
+			//print("PASSED")
 			let randomMove: Bool
 			if dropAction.moveDirection == nil {
 					randomMove = true

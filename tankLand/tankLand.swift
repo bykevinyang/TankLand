@@ -140,14 +140,13 @@ class TankLand {
 				var alivePlayers = tanks.count
 
 				// Charge life support
-                print("All objects charged life support")
+        print("All objects charged life support")
 				for tank in tanks { tank.chargeEnergy(Constants.costLifeSupportTank) }
 				for mine in mines { mine.chargeEnergy(Constants.costLifeSupportMine) }
 				for rover in rovers { rover.chargeEnergy(Constants.costLifeSupportRover) }
 
 				var allObjects: [[GameObject]] = [tanks, mines, rovers]
-
-                var needToFilter = false
+        var needToFilter = false
 				// Remove dead objects
 				for (i, objects) in allObjects.enumerated() {
 						for (j, object) in objects.enumerated() {
@@ -165,18 +164,21 @@ class TankLand {
                             needToFilter = false
                         }
 				}
-
+        
+				// print("BEFORE ROVERS")	
 				for r in rovers {
-					let result = self.move(gameObject: r, action: nil)
-					if type(of: result) == (Bool, Bool).self {
-						let boolResult = result as! (Bool, Bool)
-						if boolResult.1 == true {
-							if self.checkWinner() {
-								return true
-							}
-						}
-					}
+          //print("Debug 4 Debug 4 Debug 4 Debug 4 ")
+					let result = self.move(gameObject: r, action: nil) 
+          if type(of: result) == (Bool, Bool).self {
+            let boolResult = result as! (Bool, Bool) 
+            if boolResult.1 == true {
+              if self.checkWinner() {
+                return true
+              }
+            }
+          }        
 				}
+				// print("AFTER ROVERS")
 
 				typealias PreActionFunc = (Tank, PreAction) -> Any
 				typealias PostActionFunc = (Tank, PostAction) -> Any
@@ -203,20 +205,25 @@ class TankLand {
 						ActionType.Move,             // 4
 				]
 
-						// Compute PreActions
+				// Compute PreActions
 				for tank in tanks {
 					tank.computePreActions()
 				}
 
 				// Do PreActions
 				for tank in tanks {
+						print(tank)
 						for (actionType, preAction) in tank.preActions {
+							// print(tank.preActions)
+							// print(actionType, preAction)
 								if let actionFunc = preactionsToFunc[actionType] {
+										print(actionFunc)	
 										let result = actionFunc(tank, preAction)
 								}
 						}
 				}
 
+				print("COMPUTING POSTACTIONS")
 				// Compute PostActions
 				for tank in tanks {
 						for tank in objects.0 {
@@ -224,12 +231,17 @@ class TankLand {
 						}
 				}
 
+				// print("On to postactions")
 				// Do PostActions
 				for tank in tanks {
 						for currentActionToExecute in orderOfPostActions { // To maintain the order in which to execute the post actions
 								if let tankAction = tank.postActions[currentActionToExecute] {
+										print("Running postAction")
 										if let postAction = postactionsToFunc[currentActionToExecute] {
+												print("\(tank.id)")
+												print("Running postAction: \(tankAction)")
 												let result = postAction(tank, tankAction) // Actual execution of the post action
+												print("executed func")
 												if type(of: result) == (Bool, Bool).self {
 														let boolResult = result as! (Bool, Bool)
 														if boolResult.1 == true {
@@ -244,7 +256,7 @@ class TankLand {
 
 						// Clear Post and Preactions 
 				for tank in objects.0 {
-                        print("\(tank.id): \(tank.shield)")
+            print("\(tank.id): \(tank.shield)")
 						// print("Before Clear")	
 						// print(tank.preActions)
 						// print(tank.postActions)

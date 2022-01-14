@@ -65,6 +65,8 @@ extension TankLand {
 				} 
 			}
 		}
+		tank.setRadarResults(results)
+		print("\(tank.id) ran radar: \(results)")
 		return results 
 	}
 }
